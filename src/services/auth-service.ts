@@ -74,9 +74,5 @@ export const authService = appApi.injectEndpoints({
   })
 })
 
-export const {
-  useSignUpMutation,
-  useLoginMutation,
-  useGoogleAuthMutation,
-  useLogoutMutation
-} = authService
+export const { useLoginMutation, useGoogleAuthMutation, useLogoutMutation } =
+  authService
