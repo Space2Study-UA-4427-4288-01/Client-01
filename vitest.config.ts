@@ -25,7 +25,7 @@ export default defineConfig({
       exclude: ['./src/tests/setup-tests.js'],
       reportsDirectory: './src/tests/coverage'
     },
-    reporters: ['vitest-sonar-reporter', 'default'],
-    outputFile: 'test-report.xml'
+    reporters: ['default', 'vitest-sonar-reporter'],
+    outputFile: { 'vitest-sonar-reporter': 'test-report.xml' }
   }
 })
