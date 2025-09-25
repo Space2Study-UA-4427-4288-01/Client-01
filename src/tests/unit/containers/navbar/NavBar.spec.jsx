@@ -48,6 +48,30 @@ describe('Guest NavBar test', () => {
 
     await waitFor(() => expect(closeIcon).toBeInTheDocument())
   })
+
+  it('should handle logo click and scroll to top', () => {
+    // Mock document.querySelector and scrollTo
+    const mockScrollContainer = {
+      scrollTop: 100,
+      scrollTo: vi.fn()
+    }
+    const querySelectorSpy = vi
+      .spyOn(document, 'querySelector')
+      .mockReturnValue(mockScrollContainer)
+
+    const logo = screen.getByAltText('logo')
+    const logoButton = logo.closest('button')
+    fireEvent.click(logoButton)
+
+    expect(querySelectorSpy).toHaveBeenCalledWith('#main-content')
+    expect(mockScrollContainer.scrollTo).toHaveBeenCalledWith({
+      top: 0,
+      behavior: 'smooth'
+    })
+
+    // Cleanup
+    querySelectorSpy.mockRestore()
+  })
 })
 
 describe('Student NavBar test', () => {
