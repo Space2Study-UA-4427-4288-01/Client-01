@@ -70,7 +70,12 @@ const LoginForm = ({
         {t('login.forgotPassword')}
       </Typography>
 
-      <AppButton loading={authLoading} sx={styles.loginButton} type='submit'>
+      <AppButton
+        disabled={!data.email || !data.password}
+        loading={authLoading}
+        sx={styles.loginButton}
+        type='submit'
+      >
         {t('common.labels.login')}
       </AppButton>
     </Box>
