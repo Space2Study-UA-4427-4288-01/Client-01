@@ -18,9 +18,9 @@ const GoogleButton = ({ role, route, buttonWidth, type }) => {
   const [googleAuth] = useGoogleAuthMutation()
 
   const handleCredentialResponse = useCallback(
-    async (token) => {
+    async (response) => {
       try {
-        await googleAuth({ token, role }).unwrap()
+        await googleAuth({ token: response.credential, role }).unwrap()
         closeModal()
       } catch (e) {
         setAlert({
