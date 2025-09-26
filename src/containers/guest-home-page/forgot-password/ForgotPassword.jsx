@@ -78,7 +78,7 @@ const ForgotPassword = () => {
 
   return (
     <Box sx={styles.root}>
-      <Box sx={{ mb: 2 }}>
+      <Box sx={{ mb: 4 }}>
         <TitleWithDescription
           description={t('login.enterEmail')}
           style={styles.titleWithDescription}
