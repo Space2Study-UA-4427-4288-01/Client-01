@@ -71,7 +71,7 @@ const LoginForm = ({
       </Typography>
 
       <AppButton
-        disabled={!data.email || !data.password}
+        disabled={!data.email || !data.password || !!errors.email}
         loading={authLoading}
         sx={styles.loginButton}
         type='submit'
