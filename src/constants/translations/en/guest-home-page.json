@@ -50,7 +50,7 @@
       },
       "sendRequest": {
         "title": "Send Request",
-        "description": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout."
+        "description": "Write a request to the tutor in two clicks, where you indicate/confirm the price and the desired level of training."
       },
       "startLearning": {
         "title": "Start Learning",
