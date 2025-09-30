@@ -6,8 +6,8 @@ vi.mock('~/hooks/use-debounce', () => ({
   useDebounce: (cb: (...args: unknown[]) => void) => cb
 }))
 
-vi.mock('~/assets/img/find-offer/currency_uah.svg', () => ({ 
-  default: 'uah.svg' 
+vi.mock('~/assets/img/find-offer/currency_uah.svg', () => ({
+  default: 'uah.svg'
 }))
 
 describe('SliderWithInput', () => {
@@ -105,8 +105,8 @@ describe('SliderWithInput', () => {
     )
 
     const input = screen.getByRole('textbox')
-    fireEvent.change(input, { 
-      target: { value: String(defaultProps.max + 50) } 
+    fireEvent.change(input, {
+      target: { value: String(defaultProps.max + 50) }
     })
 
     expect(onChange).toHaveBeenCalledWith(defaultProps.max)
