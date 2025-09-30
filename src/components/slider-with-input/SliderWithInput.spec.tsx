@@ -3,10 +3,12 @@ import { render, screen, fireEvent } from '@testing-library/react'
 import SliderWithInput from '~/components/slider-with-input/SliderWithInput'
 
 vi.mock('~/hooks/use-debounce', () => ({
-  useDebounce: (cb: (...args: any[]) => void) => cb
+  useDebounce: (cb: (...args: unknown[]) => void) => cb
 }))
 
-vi.mock('~/assets/img/find-offer/currency_uah.svg', () => ({ default: 'uah.svg' }))
+vi.mock('~/assets/img/find-offer/currency_uah.svg', () => ({ 
+  default: 'uah.svg' 
+}))
 
 describe('SliderWithInput', () => {
   const defaultProps = {
@@ -25,32 +27,32 @@ describe('SliderWithInput', () => {
   it('should render correctly', () => {
     render(
       <SliderWithInput
-        title={defaultProps.title}
         defaultValue={defaultProps.defaultValue}
-        min={defaultProps.min}
         max={defaultProps.max}
+        min={defaultProps.min}
         onChange={onChange}
+        title={defaultProps.title}
       />
     )
 
     expect(screen.getByText(defaultProps.title)).toBeInTheDocument()
     expect(screen.getByRole('slider')).toBeInTheDocument()
-    const input = screen.getByRole('textbox') as HTMLInputElement
-    expect(input.value).toBe(String(defaultProps.defaultValue))
+    const input = screen.getByRole('textbox')
+    expect(input).toHaveValue(String(defaultProps.defaultValue))
   })
 
   it('should call onChange when slider is moved', () => {
     render(
       <SliderWithInput
-        title={defaultProps.title}
         defaultValue={defaultProps.defaultValue}
-        min={defaultProps.min}
         max={defaultProps.max}
+        min={defaultProps.min}
         onChange={onChange}
+        title={defaultProps.title}
       />
     )
 
-    const slider = screen.getByRole('slider') as HTMLInputElement
+    const slider = screen.getByRole('slider')
     fireEvent.change(slider, { target: { value: '30' } })
 
     expect(onChange).toHaveBeenCalledWith(30)
@@ -59,15 +61,15 @@ describe('SliderWithInput', () => {
   it('should update inputValue correctly when input value is empty', () => {
     render(
       <SliderWithInput
-        title={defaultProps.title}
         defaultValue={defaultProps.defaultValue}
-        min={defaultProps.min}
         max={defaultProps.max}
+        min={defaultProps.min}
         onChange={onChange}
+        title={defaultProps.title}
       />
     )
 
-    const input = screen.getByRole('textbox') as HTMLInputElement
+    const input = screen.getByRole('textbox')
     fireEvent.change(input, { target: { value: '' } })
 
     expect(input.value).toBe('')
@@ -77,11 +79,11 @@ describe('SliderWithInput', () => {
   it('should not update prices when input is blurred and value has not changed', () => {
     render(
       <SliderWithInput
-        title={defaultProps.title}
         defaultValue={defaultProps.defaultValue}
-        min={defaultProps.min}
         max={defaultProps.max}
+        min={defaultProps.min}
         onChange={onChange}
+        title={defaultProps.title}
       />
     )
 
@@ -94,16 +96,18 @@ describe('SliderWithInput', () => {
   it('should update prices when input is blurred and input is greater than max value', () => {
     render(
       <SliderWithInput
-        title={defaultProps.title}
         defaultValue={defaultProps.defaultValue}
-        min={defaultProps.min}
         max={defaultProps.max}
+        min={defaultProps.min}
         onChange={onChange}
+        title={defaultProps.title}
       />
     )
 
-    const input = screen.getByRole('textbox') as HTMLInputElement
-    fireEvent.change(input, { target: { value: String(defaultProps.max + 50) } })
+    const input = screen.getByRole('textbox')
+    fireEvent.change(input, { 
+      target: { value: String(defaultProps.max + 50) } 
+    })
 
     expect(onChange).toHaveBeenCalledWith(defaultProps.max)
 
