@@ -14,25 +14,11 @@ const switchOptions = {
   }
 }
 
+const user = userEvent.setup()
+const handleChange = vi.fn()
+
 describe('AppContentSwitcher', () => {
-  it('should render with the correct props', () => {
-    render(
-      <AppContentSwitcher
-        active
-        onChange={() => {}}
-        switchOptions={switchOptions}
-        typographyVariant='body1'
-      />
-    )
-
-    expect(screen.getByText('Left Option')).toBeInTheDocument()
-    expect(screen.getByText('Right Option')).toBeInTheDocument()
-    expect(screen.getByTestId('switch')).toBeInTheDocument()
-  })
-
-  it('should call the onChange function when the switch is clicked', async () => {
-    const user = userEvent.setup()
-    const handleChange = vi.fn()
+  beforeEach(() => {
     render(
       <AppContentSwitcher
         active
@@ -41,7 +27,15 @@ describe('AppContentSwitcher', () => {
         typographyVariant='body1'
       />
     )
+  })
 
+  it('should render with the correct props', () => {
+    expect(screen.getByText('Left Option')).toBeInTheDocument()
+    expect(screen.getByText('Right Option')).toBeInTheDocument()
+    expect(screen.getByTestId('switch')).toBeInTheDocument()
+  })
+
+  it('should call the onChange function when the switch is clicked', async () => {
     const switchElement = screen.getByRole('checkbox')
     await user.click(switchElement)
 
@@ -49,16 +43,6 @@ describe('AppContentSwitcher', () => {
   })
 
   it('should renders tooltips when tooltip props are passed', async () => {
-    const user = userEvent.setup()
-    render(
-      <AppContentSwitcher
-        active
-        onChange={() => {}}
-        switchOptions={switchOptions}
-        typographyVariant='body1'
-      />
-    )
-
     await user.hover(screen.getByText('Left Option'))
     expect(await screen.findByText('Left Tooltip')).toBeInTheDocument()
 
