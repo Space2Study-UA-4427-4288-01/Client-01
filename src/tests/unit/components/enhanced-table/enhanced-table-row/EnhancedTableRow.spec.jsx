@@ -1,0 +1,92 @@
+import { render, screen, waitFor } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { beforeEach, expect, it, vi } from 'vitest'
+import EnhancedTableRow from '~/components/enhanced-table/enhanced-table-row/EnhancedTableRow'
+
+vi.mock('react-i18next', () => ({
+  useTranslation: () => ({
+    t: (key) => key
+  })
+}))
+
+vi.mock('react-router-dom', () => ({
+  useNavigate: vi.fn()
+}))
+const user = userEvent.setup()
+
+describe('EnhancedTableRow', () => {
+  const props = {
+    columns: [
+      { field: 'name', label: 'Name' },
+      { field: 'age', label: 'Age' }
+    ],
+    isSelection: true,
+    item: { _id: '1', name: 'First Name', age: 29 },
+    refetchData: vi.fn(),
+    rowActions: [{ label: 'Some Action', func: vi.fn() }],
+    onRowClick: vi.fn(),
+    select: {
+      isSelected: vi.fn().mockReturnValue(false),
+      handleSelectClick: vi.fn()
+    },
+    selectedRows: []
+  }
+
+  beforeEach(() => {
+    render(<EnhancedTableRow {...props} />)
+  })
+
+  it('should render table row with correct data', () => {
+    expect(screen.getByText('First Name')).toBeInTheDocument()
+    expect(screen.getByText('29')).toBeInTheDocument()
+  })
+
+  it('should call handleSelectClick when checkbox is clicked', async () => {
+    const checkbox = screen.getByRole('checkbox')
+    await user.click(checkbox)
+
+    expect(props.select.handleSelectClick).toBeCalledTimes(1)
+    expect(props.select.handleSelectClick).toHaveBeenLastCalledWith(
+      expect.any(Object),
+      '1'
+    )
+  })
+
+  it('should render action menu when menu icon is clicked', async () => {
+    const menuIcon = screen.getByTestId('menu-icon')
+    await user.click(menuIcon)
+
+    const menu = await screen.findByRole('menu')
+    expect(menu).toBeInTheDocument()
+
+    const menuItems = await screen.findAllByRole('menuitem')
+    expect(menuItems).toHaveLength(props.rowActions.length)
+    expect(menuItems[0]).toHaveTextContent('Some Action')
+  })
+
+  it('should call onAction function when clicking on the menu item', async () => {
+    const menuIcon = screen.getByTestId('menu-icon')
+    await user.click(menuIcon)
+
+    const actionItem = await screen.findByRole('menuitem', {
+      name: 'Some Action'
+    })
+    await user.click(actionItem)
+
+    expect(props.rowActions[0].func).toHaveBeenCalledWith('1')
+    expect(props.refetchData).toHaveBeenCalled()
+  })
+
+  it('should close menu when "escape" is pressed', async () => {
+    const menuIcon = screen.getByTestId('menu-icon')
+    await user.click(menuIcon)
+
+    expect(screen.getByRole('menu')).toBeInTheDocument()
+
+    await user.keyboard('{Escape}')
+
+    await waitFor(() => {
+      expect(screen.queryByRole('menu')).not.toBeInTheDocument()
+    })
+  })
+})
