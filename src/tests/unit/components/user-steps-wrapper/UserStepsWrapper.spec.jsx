@@ -4,12 +4,25 @@ import { fireEvent, screen } from '@testing-library/react'
 import UserStepsWrapper from '~/components/user-steps-wrapper/UserStepsWrapper'
 import { renderWithProviders } from '~tests/test-utils'
 
-vi.mock('~/hooks/use-redux', () => ({
-  useAppDispatch: () => vi.fn()
-}))
-vi.mock('~/redux/reducer', () => ({
-  markFirstLoginComplete: vi.fn()
-}))
+vi.mock('~/hooks/use-redux', async () => {
+  const actual = await vi.importActual('~/hooks/use-redux')
+  return {
+    ...actual,
+    useAppDispatch: () => vi.fn(),
+    useAppSelector: vi.fn(() => ({
+      userId: 'test-user-id',
+      userRole: 'tutor',
+      isFirstLogin: true
+    }))
+  }
+})
+vi.mock('~/redux/reducer', async () => {
+  const actual = await vi.importActual('~/redux/reducer')
+  return {
+    ...actual,
+    markFirstLoginComplete: vi.fn()
+  }
+})
 
 vi.mock('~/containers/tutor-home-page/general-info-step/GeneralInfoStep', () => ({
   default: ({ btnsBox }) => (
@@ -39,6 +52,17 @@ vi.mock('~/containers/tutor-home-page/language-step/LanguageStep', () => ({
 vi.mock('~/utils/image-resize', () => ({
   imageResize: vi.fn(async () => 'data:image/png;base64,RESIZED_DATA')
 }))
+
+global.DataTransfer = class DataTransfer {
+  constructor() {
+    this.items = {
+      add: (file) => {
+        this.files.push(file)
+      }
+    }
+    this.files = []
+  }
+}
 
 const createFile = (name, type, sizeBytes) => {
   const blob = new Blob([new Uint8Array(sizeBytes)], { type })
