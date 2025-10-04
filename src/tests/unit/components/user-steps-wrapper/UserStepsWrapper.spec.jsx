@@ -24,14 +24,17 @@ vi.mock('~/redux/reducer', async () => {
   }
 })
 
-vi.mock('~/containers/tutor-home-page/general-info-step/GeneralInfoStep', () => ({
-  default: ({ btnsBox }) => (
-    <div>
-      <div>GeneralInfoStep</div>
-      {btnsBox}
-    </div>
-  )
-}))
+vi.mock(
+  '~/containers/tutor-home-page/general-info-step/GeneralInfoStep',
+  () => ({
+    default: ({ btnsBox }) => (
+      <div>
+        <div>GeneralInfoStep</div>
+        {btnsBox}
+      </div>
+    ),
+  })
+)
 vi.mock('~/containers/tutor-home-page/subjects-step/SubjectsStep', () => ({
   default: ({ btnsBox }) => (
     <div>
@@ -69,45 +72,55 @@ const createFile = (name, type, sizeBytes) => {
   return new File([blob], name, { type })
 }
 
-vi.mock('~/containers/tutor-home-page/add-photo-step/AddPhotoStep', async () => {
-  const React = await import('react')
-  const { useState } = React
-  const { imageResize } = await import('~/utils/image-resize')
+vi.mock(
+  '~/containers/tutor-home-page/add-photo-step/AddPhotoStep',
+  async () => {
+    const React = await import('react')
+    const { useState } = React
+    const { imageResize } = await import('~/utils/image-resize')
 
-  const MAX_FILE_SIZE = 1_000_000
+    const MAX_FILE_SIZE = 1_000_000
 
-  const AddPhotoStepMock = ({ btnsBox }) => {
-    const [error, setError] = useState('')
-    const [photoUrl, setPhotoUrl] = useState('')
+    const AddPhotoStepMock = ({ btnsBox }) => {
+      const [error, setError] = useState('')
+      const [photoUrl, setPhotoUrl] = useState('')
 
-    const onChange = async (e) => {
-      const file = e.target.files[0]
-      if (!file) return
-      if (file.size > MAX_FILE_SIZE) {
-        setError('becomeTutor.photo.fileSizeError')
-        return
+      const onChange = async (e) => {
+        const file = e.target.files[0]
+        if (!file) return
+        if (file.size > MAX_FILE_SIZE) {
+          setError('becomeTutor.photo.fileSizeError')
+          return
+        }
+        setError('')
+        const resized = await imageResize('blob:fake', {
+          newHeight: 100,
+          newWidth: 100,
+        })
+        setPhotoUrl(resized)
       }
-      setError('')
-      const resized = await imageResize('blob:fake', { newHeight: 100, newWidth: 100 })
-      setPhotoUrl(resized)
+
+      return (
+        <div>
+          <div>PhotoStep</div>
+          <label>
+            Upload Photo
+            <input
+              type="file"
+              aria-label="photo-input"
+              onChange={onChange}
+            />
+          </label>
+          {error && <div role="alert">{error}</div>}
+          {photoUrl && <img alt="uploaded" src={photoUrl} />}
+          {btnsBox}
+        </div>
+      )
     }
 
-    return (
-      <div>
-        <div>PhotoStep</div>
-        <label>
-          Upload Photo
-          <input aria-label="photo-input" type="file" onChange={onChange} />
-        </label>
-        {error && <div role="alert">{error}</div>}
-        {photoUrl && <img alt="uploaded" src={photoUrl} />}
-        {btnsBox}
-      </div>
-    )
+    return { default: AddPhotoStepMock }
   }
-
-  return { default: AddPhotoStepMock }
-})
+)
 
 describe('UserStepsWrapper', () => {
   const renderComponent = () =>
