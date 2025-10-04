@@ -32,7 +32,7 @@ vi.mock(
         <div>GeneralInfoStep</div>
         {btnsBox}
       </div>
-    ),
+    )
   })
 )
 vi.mock('~/containers/tutor-home-page/subjects-step/SubjectsStep', () => ({
@@ -95,7 +95,7 @@ vi.mock(
         setError('')
         const resized = await imageResize('blob:fake', {
           newHeight: 100,
-          newWidth: 100,
+          newWidth: 100
         })
         setPhotoUrl(resized)
       }
@@ -105,14 +105,10 @@ vi.mock(
           <div>PhotoStep</div>
           <label>
             Upload Photo
-            <input
-              type="file"
-              aria-label="photo-input"
-              onChange={onChange}
-            />
+            <input type='file' aria-label='photo-input' onChange={onChange} />
           </label>
-          {error && <div role="alert">{error}</div>}
-          {photoUrl && <img alt="uploaded" src={photoUrl} />}
+          {error && <div role='alert'>{error}</div>}
+          {photoUrl && <img alt='uploaded' src={photoUrl} />}
           {btnsBox}
         </div>
       )
