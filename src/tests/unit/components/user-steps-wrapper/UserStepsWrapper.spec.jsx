@@ -105,7 +105,7 @@ vi.mock(
           <div>PhotoStep</div>
           <label>
             Upload Photo
-            <input type='file' aria-label='photo-input' onChange={onChange} />
+            <input aria-label='photo-input' type='file' onChange={onChange} />
           </label>
           {error && <div role='alert'>{error}</div>}
           {photoUrl && <img alt='uploaded' src={photoUrl} />}
