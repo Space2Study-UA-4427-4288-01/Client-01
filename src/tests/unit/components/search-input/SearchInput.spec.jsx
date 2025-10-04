@@ -29,7 +29,7 @@ describe('SearchInput', () => {
 
   it('should call setSearch when search icon is clicked', () => {
     renderComponent()
-    
+
     const searchIcon = screen.getByTestId('search-icon')
     fireEvent.click(searchIcon)
 
@@ -38,7 +38,7 @@ describe('SearchInput', () => {
 
   it('should call setState with empty string when delete icon is clicked', () => {
     renderComponent({ search: 'test' })
-    
+
     const deleteIcon = screen.getByTestId('delete-icon')
     fireEvent.click(deleteIcon)
 
@@ -47,7 +47,7 @@ describe('SearchInput', () => {
 
   it('should call setSearch when enter is pressed', () => {
     renderComponent()
-    
+
     const input = screen.getByRole('textbox')
     fireEvent.keyPress(input, { key: 'Enter', charCode: 13 })
 
@@ -56,21 +56,21 @@ describe('SearchInput', () => {
 
   it('should have hidden class if search is empty', () => {
     renderComponent({ search: '' })
-    
+
     const deleteIcon = screen.getByTestId('delete-icon')
     expect(deleteIcon).toHaveClass('hidden')
   })
 
   it('should have visible class if search is not empty', () => {
     renderComponent({ search: 'test search' })
-    
+
     const deleteIcon = screen.getByTestId('delete-icon')
     expect(deleteIcon).toHaveClass('visible')
   })
 
   it('should update searchInput when typing', () => {
     renderComponent()
-    
+
     const input = screen.getByRole('textbox')
     fireEvent.change(input, { target: { value: 'new search' } })
 
@@ -79,10 +79,10 @@ describe('SearchInput', () => {
 
   it('should call setSearch with current input value when search icon is clicked after typing', () => {
     renderComponent()
-    
+
     const input = screen.getByRole('textbox')
     const searchIcon = screen.getByTestId('search-icon')
-    
+
     fireEvent.change(input, { target: { value: 'typed search' } })
     fireEvent.click(searchIcon)
 
@@ -91,9 +91,8 @@ describe('SearchInput', () => {
 
   it('should call setSearch with current input value when enter is pressed after typing', () => {
     renderComponent()
-    
+
     const input = screen.getByRole('textbox')
-    
     fireEvent.change(input, { target: { value: 'typed search' } })
     fireEvent.keyPress(input, { key: 'Enter', charCode: 13 })
 
