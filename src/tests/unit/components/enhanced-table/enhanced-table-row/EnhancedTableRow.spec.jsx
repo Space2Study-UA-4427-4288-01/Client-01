@@ -33,7 +33,13 @@ describe('EnhancedTableRow', () => {
   }
 
   beforeEach(() => {
-    render(<EnhancedTableRow {...props} />)
+    render(
+      <table>
+        <tbody>
+          <EnhancedTableRow {...props} />
+        </tbody>
+      </table>
+    )
   })
 
   it('should render table row with correct data', () => {
