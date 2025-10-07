@@ -33,7 +33,7 @@ describe('QuestionEditor', () => {
     onEdit = vi.fn()
   })
 
-  test('renders question input field', () => {
+  it('renders question input field', () => {
     render(
       <QuestionEditor
         data={mockData}
@@ -44,7 +44,7 @@ describe('QuestionEditor', () => {
     expect(screen.getByLabelText('questionPage.question')).toBeInTheDocument()
   })
 
-  test('renders open answer input when type is openAnswer', () => {
+  it('renders open answer input when type is openAnswer', () => {
     const data = { ...mockData, type: 'openAnswer', openAnswer: 'Open answer' }
     render(
       <QuestionEditor
@@ -56,7 +56,7 @@ describe('QuestionEditor', () => {
     expect(screen.getByLabelText('questionPage.answer')).toBeInTheDocument()
   })
 
-  test('changes question type', () => {
+  it('changes question type', () => {
     render(
       <QuestionEditor
         data={mockData}
@@ -69,7 +69,7 @@ describe('QuestionEditor', () => {
     expect(handleNonInputValueChange).toHaveBeenCalled()
   })
 
-  test('changes question and answer input fields', () => {
+  it('changes question and answer input fields', () => {
     render(
       <QuestionEditor
         data={mockData}
@@ -89,7 +89,7 @@ describe('QuestionEditor', () => {
     expect(handleNonInputValueChange).toHaveBeenCalled()
   })
 
-  test('clicks on edit title and category', () => {
+  it('clicks on edit title and category', () => {
     render(
       <QuestionEditor
         data={mockData}
