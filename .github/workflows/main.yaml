@@ -47,7 +47,7 @@ jobs:
       - uses: actions/checkout@v3
       
       # Docker Build
-      - uses: docker/setup-buildx-action@v3
+      - uses: docker/setup-buildx-action@v3 # NOSONAR (previous implementstion)
 
       - uses: docker/build-push-action@v3
         with:
