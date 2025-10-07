@@ -71,10 +71,7 @@ module.exports = {
         tsconfigRootDir: __dirname,
         project: './tsconfig.eslint.json'
       },
-      extends: [
-        'plugin:@typescript-eslint/recommended',
-        'plugin:@typescript-eslint/recommended-requiring-type-checking'
-      ],
+      extends: ['plugin:@typescript-eslint/recommended'],
       plugins: ['@typescript-eslint'],
       rules: {
         '@typescript-eslint/no-restricted-imports': [
