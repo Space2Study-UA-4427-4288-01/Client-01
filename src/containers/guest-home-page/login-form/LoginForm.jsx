@@ -44,7 +44,7 @@ const LoginForm = ({
         onChange={handleChange('email')}
         required
         size='large'
-        sx={{ mb: '5px' }}
+        sx={styles.field}
         type='email'
         value={data.email}
       />
@@ -57,6 +57,7 @@ const LoginForm = ({
         onBlur={handleBlur('password')}
         onChange={handleChange('password')}
         required
+        sx={styles.field}
         type={showPassword ? 'text' : 'password'}
         value={data.password}
       />

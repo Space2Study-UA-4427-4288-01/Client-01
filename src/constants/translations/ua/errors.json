@@ -1,6 +1,7 @@
 {
   "USER_NOT_REGISTERED": "Користувач не зареєстрований",
   "INCORRECT_CREDENTIALS": "Введений вами пароль некоректний",
+  "RATE_LIMIT_EXCEEDED": "Занадто багато спроб входу. Спробуйте пізніше.",
   "ROLE_NOT_SUPPORTED": "Роль користувача не підтримується",
   "ALREADY_REGISTERED": "Акаунт з таким email вже зареєстровано",
   "EMAIL_ALREADY_CONFIRMED": "Користувача з таким email вже підтверджено",

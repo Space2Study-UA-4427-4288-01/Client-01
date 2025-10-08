@@ -60,7 +60,7 @@ const ForgotPassword = () => {
 
   const { handleSubmit, handleInputChange, handleBlur, errors, data } = useForm(
     {
-      onSubmit: async () => sendEmail(data),
+      onSubmit: async () => sendEmail(data.email),
       initialValues: { email: '' },
       validations: { email }
     }

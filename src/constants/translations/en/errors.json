@@ -1,6 +1,7 @@
 {
   "USER_NOT_REGISTERED": "User is not registered",
   "INCORRECT_CREDENTIALS": "The password you entered is incorrect",
+  "RATE_LIMIT_EXCEEDED": "Too many login attempts. Try again later.",
   "ROLE_NOT_SUPPORTED": "User role is not supported",
   "ALREADY_REGISTERED": "An account with this email already exists",
   "EMAIL_ALREADY_CONFIRMED": "User with this email is already confirmed",
