@@ -9,7 +9,6 @@ const setFullScreen = vi.fn()
 
 const props = {
   content: 'test',
-  closeModal,
   closeModalAfterDelay,
   timerId: null,
   isFullScreen: true,
@@ -22,6 +21,12 @@ vi.mock('~/hooks/use-confirm', () => {
   }
 })
 
+vi.mock('~/context/modal-context', () => ({
+  useModalContext: () => ({
+    closeModal
+  })
+}))
+
 describe('Popup dialog test', () => {
   beforeEach(() => {
     render(<PopupDialog {...props} />)
@@ -31,6 +36,13 @@ describe('Popup dialog test', () => {
     const content = screen.getByText(props.content)
 
     expect(content).toBeInTheDocument()
+  })
+
+  it('should close modal when X button is clicked', () => {
+    const closeButton = screen.getByRole('button')
+    fireEvent.click(closeButton)
+
+    expect(closeModal).toHaveBeenCalledTimes(1)
   })
 })
 
