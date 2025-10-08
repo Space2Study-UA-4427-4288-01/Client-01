@@ -46,7 +46,6 @@ describe('SliderWithInput', () => {
 
   it('should render correctly', () => {
     const { getByText, getByRole } = renderResult
-    )
 
     expect(getByText('Test Slider')).toBeInTheDocument()
     expect(getByRole('slider')).toBeInTheDocument()
