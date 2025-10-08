@@ -35,13 +35,15 @@ describe('SliderWithInput', () => {
     title: 'Test Slider'
   }
 
+  let renderResult
+
   beforeEach(() => {
     vi.clearAllMocks()
+    renderResult = render(<SliderWithInput {...defaultProps} />)
   })
 
   it('should render correctly', () => {
-    const { getByText, getByRole } = render(
-      <SliderWithInput {...defaultProps} />
+    const { getByText, getByRole } = renderResult
     )
 
     expect(getByText('Test Slider')).toBeInTheDocument()
@@ -50,7 +52,7 @@ describe('SliderWithInput', () => {
   })
 
   it('should call onChange when slider is moved', async () => {
-    const { getByRole } = render(<SliderWithInput {...defaultProps} />)
+    const { getByRole } = renderResult
     const slider = getByRole('slider')
 
     fireEvent.change(slider, { target: { value: '75' } })
@@ -61,7 +63,7 @@ describe('SliderWithInput', () => {
   })
 
   it('should update inputValue correctly when input value is empty', () => {
-    const { getByRole } = render(<SliderWithInput {...defaultProps} />)
+    const { getByRole } = renderResult
     const input = getByRole('textbox')
 
     fireEvent.change(input, { target: { value: '' } })
@@ -75,7 +77,7 @@ describe('SliderWithInput', () => {
 
   it('should not update prices when input is blurred and value in input has not changed', async () => {
     const user = userEvent.setup()
-    const { getByRole } = render(<SliderWithInput {...defaultProps} />)
+    const { getByRole } = renderResult
     const input = getByRole('textbox')
 
     await user.clear(input)
@@ -93,7 +95,7 @@ describe('SliderWithInput', () => {
   })
 
   it('should update prices when input is blurred and input is greater than max value', async () => {
-    const { getByRole } = render(<SliderWithInput {...defaultProps} />)
+    const { getByRole } = renderResult
     const input = getByRole('textbox')
 
     fireEvent.change(input, { target: { value: '150' } })
@@ -108,7 +110,7 @@ describe('SliderWithInput', () => {
   })
 
   it('should handle input change with valid number', async () => {
-    const { getByRole } = render(<SliderWithInput {...defaultProps} />)
+    const { getByRole } = renderResult
     const input = getByRole('textbox')
 
     fireEvent.change(input, { target: { value: '75' } })
@@ -121,7 +123,7 @@ describe('SliderWithInput', () => {
   })
 
   it('should constrain input value to min when below minimum', async () => {
-    const { getByRole } = render(<SliderWithInput {...defaultProps} />)
+    const { getByRole } = renderResult
     const input = getByRole('textbox')
 
     fireEvent.change(input, { target: { value: '-10' } })
@@ -136,7 +138,7 @@ describe('SliderWithInput', () => {
   })
 
   it('should handle slider change with array value', () => {
-    const { getByRole } = render(<SliderWithInput {...defaultProps} />)
+    const { getByRole } = renderResult
     const slider = getByRole('slider')
 
     fireEvent.change(slider, { target: { value: [25, 75] } })
