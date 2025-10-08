@@ -39,9 +39,7 @@ describe('SliderWithInput', () => {
 
   beforeEach(() => {
     vi.clearAllMocks()
-    renderResult = render(
-      <SliderWithInput {...defaultProps} />
-    )
+    renderResult = render(<SliderWithInput {...defaultProps} />)
   })
 
   it('should render correctly', () => {
