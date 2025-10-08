@@ -7,7 +7,8 @@ describe('SearchFilterInput', () => {
   let updateFilter
 
   const getInput = () => screen.getByRole('textbox')
-  const getSearchButton = () => screen.getByRole('button', { name: 'common.search' })
+  const getSearchButton = () =>
+    screen.getByRole('button', { name: 'common.search' })
 
   beforeEach(() => {
     updateFilter = vi.fn()
@@ -15,8 +16,8 @@ describe('SearchFilterInput', () => {
 
     render(
       <SearchFilterInput
-        updateFilter={updateFilter}
         textFieldProps={{ placeholder: 'type here' }}
+        updateFilter={updateFilter}
       />
     )
   })
