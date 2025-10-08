@@ -18,6 +18,8 @@ test-report.xml
 # misc
 /.idea
 .idea
+/.vscode
+.vscode
 .DS_Store
 .env.local
 .env.development.local
