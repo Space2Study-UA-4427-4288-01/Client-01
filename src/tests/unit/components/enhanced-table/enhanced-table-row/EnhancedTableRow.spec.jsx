@@ -32,6 +32,13 @@ describe('EnhancedTableRow', () => {
     selectedRows: []
   }
 
+  const SELECTORS = {
+    menuIcon: () => screen.getByTestId('menu-icon'),
+    menu: () => screen.queryByRole('menu'),
+    menuItems: () => screen.getAllByRole('menuitem'),
+    menuItem: (name) => screen.getByRole('menuitem', { name })
+  }
+
   beforeEach(() => {
     render(
       <table>
@@ -59,40 +66,28 @@ describe('EnhancedTableRow', () => {
   })
 
   it('should render action menu when menu icon is clicked', async () => {
-    const menuIcon = screen.getByTestId('menu-icon')
-    await user.click(menuIcon)
+    await user.click(SELECTORS.menuIcon())
 
-    const menu = await screen.findByRole('menu')
-    expect(menu).toBeInTheDocument()
-
-    const menuItems = await screen.findAllByRole('menuitem')
-    expect(menuItems).toHaveLength(props.rowActions.length)
-    expect(menuItems[0]).toHaveTextContent('Some Action')
+    expect(SELECTORS.menu()).toBeInTheDocument()
+    expect(SELECTORS.menuItems()).toHaveLength(props.rowActions.length)
+    expect(SELECTORS.menuItems()[0]).toHaveTextContent('Some Action')
   })
 
   it('should call onAction function when clicking on the menu item', async () => {
-    const menuIcon = screen.getByTestId('menu-icon')
-    await user.click(menuIcon)
-
-    const actionItem = await screen.findByRole('menuitem', {
-      name: 'Some Action'
-    })
-    await user.click(actionItem)
+    await user.click(SELECTORS.menuIcon())
+    await user.click(SELECTORS.menuItem('Some Action'))
 
     expect(props.rowActions[0].func).toHaveBeenCalledWith('1')
     expect(props.refetchData).toHaveBeenCalled()
   })
 
   it('should close menu when "escape" is pressed', async () => {
-    const menuIcon = screen.getByTestId('menu-icon')
-    await user.click(menuIcon)
+    await user.click(SELECTORS.menuIcon())
 
     expect(screen.getByRole('menu')).toBeInTheDocument()
-
     await user.keyboard('{Escape}')
-
     await waitFor(() => {
-      expect(screen.queryByRole('menu')).not.toBeInTheDocument()
+      expect(SELECTORS.menu()).not.toBeInTheDocument()
     })
   })
 })
