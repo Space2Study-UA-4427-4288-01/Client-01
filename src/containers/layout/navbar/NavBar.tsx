@@ -64,6 +64,10 @@ const Navbar = () => {
 
     if (scrollContainer && scrollContainer.scrollTop > 0) {
       scrollContainer.scrollTo({ top: 0, behavior: 'smooth' })
+      // Remove hash from URL after scrolling to top
+      if (window.location.hash) {
+        navigate(window.location.pathname, { replace: true })
+      }
     }
 
     if (pathname !== guestRoutes.home.path) {
