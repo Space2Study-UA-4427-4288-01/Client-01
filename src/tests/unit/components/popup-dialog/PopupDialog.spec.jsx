@@ -76,6 +76,18 @@ describe('Popup dialog test', () => {
     await waitFor(() => expect(closeModalAfterDelay).toHaveBeenCalled())
   })
 
+  it('should not call clearTimeout when timerId is null', () => {
+    const clearTimeoutSpy = vi.spyOn(global, 'clearTimeout')
+    renderPopup({ timerId: null })
+
+    const dialog = screen.getByTestId('popup')
+    const popupContent = within(dialog).getByTestId('popupContent')
+
+    fireEvent.mouseEnter(popupContent)
+
+    expect(clearTimeoutSpy).not.toHaveBeenCalled()
+  })
+
   it('should render fullscreen when isMobile is true', () => {
     useBreakpoints.mockReturnValue({ isMobile: true })
     renderPopup()
