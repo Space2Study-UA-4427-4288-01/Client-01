@@ -95,8 +95,8 @@ describe('QuestionEditor', () => {
         data={mockData}
         handleInputChange={handleInputChange}
         handleNonInputValueChange={handleNonInputValueChange}
-        onEdit={onEdit}
         isQuizQuestion
+        onEdit={onEdit}
       />
     )
 
