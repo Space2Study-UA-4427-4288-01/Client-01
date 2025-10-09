@@ -1,5 +1,5 @@
 import { Fragment, useMemo } from 'react'
-import { matchPath, useLocation, Link } from 'react-router-dom'
+import { matchPath, useLocation, Link, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 
 import Typography from '@mui/material/Typography'
@@ -34,6 +34,7 @@ const Navbar = () => {
   const { openDrawer, closeDrawer, isOpen } = useDrawer()
   const { openMenu, renderMenu, closeMenu, anchorEl } = useMenu()
   const { pathname } = useLocation()
+  const navigate = useNavigate()
   const { t } = useTranslation()
 
   const isChildRouteActive = findOffersChildRoutes.some((childRoute) =>
@@ -56,6 +57,18 @@ const Navbar = () => {
 
   const handleOpenSidebar = () => {
     openDrawer()
+  }
+
+  const handleLogoClick = () => {
+    const scrollContainer = document.querySelector('#main-content')
+
+    if (scrollContainer && scrollContainer.scrollTop > 0) {
+      scrollContainer.scrollTo({ top: 0, behavior: 'smooth' })
+    }
+
+    if (pathname !== guestRoutes.home.path) {
+      navigate(guestRoutes.home.path)
+    }
   }
 
   const findOffersMenu = findOffersChildRoutes.map((childRoute) => (
@@ -102,10 +115,9 @@ const Navbar = () => {
   return (
     <Box sx={styles.header}>
       <Button
-        component={Link}
+        onClick={handleLogoClick}
         size={SizeEnum.Small}
         sx={styles.logoButton}
-        to={guestRoutes.home.path}
       >
         <Logo />
       </Button>
