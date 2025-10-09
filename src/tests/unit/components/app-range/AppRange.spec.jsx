@@ -20,7 +20,7 @@ describe('AppRange', () => {
   })
 
   it('should render correctly', () => {
-    render(<AppRange min={min} max={max} onChange={onChange} />)
+    render(<AppRange max={max} min={min} onChange={onChange} />)
 
     const sliders = screen.getAllByRole('slider')
     expect(sliders).toHaveLength(2)
@@ -30,7 +30,7 @@ describe('AppRange', () => {
   })
 
   it('should call onChange when slider is moved', () => {
-    render(<AppRange min={min} max={max} onChange={onChange} />)
+    render(<AppRange max={max} min={min} onChange={onChange} />)
 
     const sliders = screen.getAllByRole('slider')
     fireEvent.change(sliders[0], { target: { value: 50 } })
@@ -39,7 +39,7 @@ describe('AppRange', () => {
   })
 
   it('should call onChange when input is changed', () => {
-    render(<AppRange min={min} max={max} onChange={onChange} />)
+    render(<AppRange max={max} min={min} onChange={onChange} />)
 
     const inputs = screen.getAllByRole('textbox')
     fireEvent.change(inputs[0], { target: { value: '10' } })
@@ -48,7 +48,7 @@ describe('AppRange', () => {
   })
 
   it('should not call onChange when input is not a number', () => {
-    render(<AppRange min={min} max={max} onChange={onChange} />)
+    render(<AppRange max={max} min={min} onChange={onChange} />)
 
     const inputs = screen.getAllByRole('textbox')
     fireEvent.change(inputs[0], { target: { value: 'abc' } })
@@ -57,7 +57,7 @@ describe('AppRange', () => {
   })
 
   it('should call onChange with min number if input is empty', () => {
-    render(<AppRange min={min} max={max} onChange={onChange} />)
+    render(<AppRange max={max} min={min} onChange={onChange} />)
 
     const inputs = screen.getAllByRole('textbox')
     fireEvent.change(inputs[0], { target: { value: '' } })
@@ -67,7 +67,7 @@ describe('AppRange', () => {
   })
 
   it('should update prices when blurred and input is greater than max', () => {
-    render(<AppRange min={min} max={max} onChange={onChange} />)
+    render(<AppRange max={max} min={min} onChange={onChange} />)
 
     const inputs = screen.getAllByRole('textbox')
     fireEvent.change(inputs[1], { target: { value: '150' } })
@@ -78,7 +78,7 @@ describe('AppRange', () => {
 
   it('should not update prices when blurred but value has not changed', () => {
     render(
-      <AppRange min={min} max={max} value={[10, 20]} onChange={onChange} />
+      <AppRange max={max} min={min} onChange={onChange} value={[10, 20]} />
     )
 
     const inputs = screen.getAllByRole('textbox')
