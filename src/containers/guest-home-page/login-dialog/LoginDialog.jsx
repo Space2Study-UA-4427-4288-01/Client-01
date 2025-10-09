@@ -25,7 +25,7 @@ const LoginDialog = () => {
       onSubmit: async () => {
         try {
           const payload = {
-            email: (data.email || '').trim(),
+            email: data.email.trim(),
             password: data.password
           }
           await loginUser(payload).unwrap()

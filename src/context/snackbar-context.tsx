@@ -17,14 +17,14 @@ interface SnackBarProviderProps {
   children: React.ReactNode
 }
 
-interface SetAllertProps {
+interface SetAlertProps {
   severity: AlertColor
   message: string | React.ReactNode
   duration?: number
 }
 
 interface SnackBarContextOutput {
-  setAlert: (options: SetAllertProps) => void
+  setAlert: (options: SetAlertProps) => void
 }
 
 const SnackBarContext = createContext({} as SnackBarContextOutput)
@@ -36,7 +36,7 @@ export const SnackBarProvider = ({ children }: SnackBarProviderProps) => {
   const [message, setMessage] = useState<string | React.ReactNode>('')
   const [duration, setDuration] = useState<number>(0)
 
-  const setAlert = useCallback((options: SetAllertProps) => {
+  const setAlert = useCallback((options: SetAlertProps) => {
     setShow(true)
     setSeverity(options.severity)
     setMessage(options.message)
