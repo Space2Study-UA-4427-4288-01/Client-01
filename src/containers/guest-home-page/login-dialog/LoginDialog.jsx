@@ -18,7 +18,7 @@ const LoginDialog = () => {
   const { t } = useTranslation()
   const { closeModal } = useModalContext()
   const { setAlert } = useSnackBarContext()
-  const [loginUser, { isLoading }] = useLoginMutation()
+  const [loginUser, { isLoading } = {}] = useLoginMutation()
 
   const { handleSubmit, handleInputChange, handleBlur, data, errors } = useForm(
     {
