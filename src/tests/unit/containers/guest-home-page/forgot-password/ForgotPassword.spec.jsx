@@ -3,6 +3,7 @@ import ForgotPassword from '~/containers/guest-home-page/forgot-password/ForgotP
 import { renderWithProviders, mockAxiosClient } from '~tests/test-utils'
 import { URLs } from '~/constants/request'
 import { vi } from 'vitest'
+import i18n from 'i18next'
 
 vi.mock('~/hooks/use-confirm', () => {
   return {
@@ -68,8 +69,14 @@ describe('ForgotPassword test', () => {
 
     const button = screen.getByText('login.sendPassword')
     fireEvent.click(button)
-    const error = await screen.findByText('errors.EMAIL_NOT_FOUND')
 
-    await waitFor(() => expect(error).toBeInTheDocument())
+    const alert = await screen.findByRole('alert')
+
+    const expected = i18n.t('errors.EMAIL_NOT_FOUND')
+    if (expected && expected !== 'errors.EMAIL_NOT_FOUND') {
+      expect(alert).toHaveTextContent(expected)
+    } else {
+      expect(alert).toHaveTextContent(/EMAIL_NOT_FOUND/i)
+    }
   })
 })

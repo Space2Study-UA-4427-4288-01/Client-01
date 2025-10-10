@@ -8,7 +8,7 @@ import useForm from '~/hooks/use-form'
 import { useLoginMutation } from '~/services/auth-service'
 import { useModalContext } from '~/context/modal-context'
 import { useSnackBarContext } from '~/context/snackbar-context'
-import { email } from '~/utils/validations/login'
+import { email, password } from '~/utils/validations/login'
 import loginImg from '~/assets/img/login-dialog/login.svg'
 import { login, snackbarVariants } from '~/constants'
 
@@ -18,23 +18,32 @@ const LoginDialog = () => {
   const { t } = useTranslation()
   const { closeModal } = useModalContext()
   const { setAlert } = useSnackBarContext()
-  const [loginUser] = useLoginMutation()
+  const [loginUser, { isLoading } = {}] = useLoginMutation()
 
   const { handleSubmit, handleInputChange, handleBlur, data, errors } = useForm(
     {
       onSubmit: async () => {
         try {
-          await loginUser(data).unwrap()
+          const payload = {
+            email: data.email.trim(),
+            password: data.password
+          }
+          await loginUser(payload).unwrap()
           closeModal()
         } catch (e) {
-          setAlert({
-            severity: snackbarVariants.error,
-            message: `errors.${e.data.code}`
-          })
+          const status = e?.status ?? e?.originalStatus ?? e?.data?.status
+          const codeOrError = e?.data?.code || e?.data?.error
+
+          const messageKey =
+            (status === 401 || status === 422 || status === 429) && codeOrError
+              ? `errors:${codeOrError}`
+              : e?.data?.message ?? 'errors:UNEXPECTED_ERROR'
+
+          setAlert({ severity: snackbarVariants.error, message: t(messageKey) })
         }
       },
       initialValues: { email: '', password: '' },
-      validations: { email }
+      validations: { email, password }
     }
   )
 
@@ -55,6 +64,7 @@ const LoginDialog = () => {
             handleBlur={handleBlur}
             handleChange={handleInputChange}
             handleSubmit={handleSubmit}
+            loading={isLoading}
           />
           <GoogleLogin buttonWidth={styles.form.maxWidth} type={login} />
         </Box>

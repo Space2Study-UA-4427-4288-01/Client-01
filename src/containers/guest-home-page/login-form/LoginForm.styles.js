@@ -4,6 +4,18 @@ export const styles = {
     flexDirection: 'column',
     minWidth: { sm: '340px' }
   },
+  field: {
+    mb: '5px',
+    '& .MuiFormHelperText-root': {
+      whiteSpace: 'normal',
+      overflow: 'visible',
+      textOverflow: 'unset',
+      overflowWrap: 'anywhere',
+      wordBreak: 'break-word',
+      lineHeight: 1.15,
+      marginBottom: '8px'
+    }
+  },
   input: {
     maxWidth: '343px'
   },

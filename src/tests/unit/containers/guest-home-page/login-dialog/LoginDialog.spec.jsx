@@ -26,7 +26,7 @@ vi.mock('~/hooks/use-confirm', () => {
   }
 })
 
-vi.mock('~/containers/guest-home-page/google-button/GoogleButton', () => ({
+vi.mock('~/containers/guest-home-page/google-login/GoogleLogin', () => ({
   __esModule: true,
   default: function () {
     return <button>Google</button>
@@ -37,7 +37,7 @@ vi.mock('~/services/auth-service', async () => {
   const actual = await vi.importActual('~/services/auth-service')
   return {
     ...actual,
-    useLoginMutation: () => [loginUser]
+    useLoginMutation: () => [loginUser, { isLoading: false }]
   }
 })
 
@@ -48,36 +48,30 @@ describe('Login dialog test', () => {
 
   it('should render img', () => {
     const img = screen.getByAltText(/login/i)
-
     expect(img).toBeInTheDocument()
   })
 
   it('should render head text', () => {
     const text = screen.getByText(/login.head/i)
-
     expect(text).toBeInTheDocument()
   })
 
   it('should change email value', () => {
     const inputEmail = screen.getByLabelText(/common.labels.email/i)
     fireEvent.change(inputEmail, { target: { value: 'test@mail.com' } })
-
     expect(inputEmail.value).toBe('test@mail.com')
   })
 
   it('should change password value', () => {
     const inputPassword = screen.getByLabelText(/common.labels.password/i)
     fireEvent.change(inputPassword, { target: { value: 'test' } })
-
     expect(inputPassword.value).toBe('test')
   })
 
   it('should show error', () => {
     const inputEmail = screen.getByLabelText(/common.labels.email/i)
     fireEvent.focusOut(inputEmail)
-
     const error = screen.getByText('common.errorMessages.emptyField')
-
     expect(error).toBeInTheDocument()
   })
 

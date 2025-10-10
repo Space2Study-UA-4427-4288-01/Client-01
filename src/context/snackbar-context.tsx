@@ -17,14 +17,14 @@ interface SnackBarProviderProps {
   children: React.ReactNode
 }
 
-interface SetAllertProps {
+interface SetAlertProps {
   severity: AlertColor
-  message: string
+  message: React.ReactNode
   duration?: number
 }
 
 interface SnackBarContextOutput {
-  setAlert: (options: SetAllertProps) => void
+  setAlert: (options: SetAlertProps) => void
 }
 
 const SnackBarContext = createContext({} as SnackBarContextOutput)
@@ -33,21 +33,31 @@ export const SnackBarProvider = ({ children }: SnackBarProviderProps) => {
   const { t } = useTranslation()
   const [show, setShow] = useState<boolean>(false)
   const [severity, setSeverity] = useState<AlertColor>(snackbarVariants.info)
-  const [message, setMessage] = useState<string>('')
+  const [message, setMessage] = useState<React.ReactNode>('')
   const [duration, setDuration] = useState<number>(0)
 
-  const setAlert = useCallback((options: SetAllertProps) => {
+  const setAlert = useCallback((options: SetAlertProps) => {
     setShow(true)
     setSeverity(options.severity)
     setMessage(options.message)
-    setDuration(options.duration || 4000)
+    setDuration(options.duration ?? 4000)
   }, [])
 
-  const handleClose = () => {
-    setShow(false)
-  }
+  const handleClose = () => setShow(false)
 
   const contextValue = useMemo(() => ({ setAlert }), [setAlert])
+
+  const renderMessage = (msg: string | React.ReactNode) => {
+    if (typeof msg !== 'string') return msg
+
+    let translated = t(msg)
+
+    if (translated === msg) {
+      translated = t(`errors.${msg}`)
+    }
+
+    return translated.split(/\r?\n/).map((line, i) => <Box key={i}>{line}</Box>)
+  }
 
   return (
     <SnackBarContext.Provider value={contextValue}>
@@ -60,14 +70,14 @@ export const SnackBarProvider = ({ children }: SnackBarProviderProps) => {
       >
         <Alert
           severity={severity}
-          sx={{ color: 'basic.white' }}
+          sx={{
+            color: 'basic.white',
+            whiteSpace: 'pre-wrap',
+            maxWidth: 'min(90vw, 560px)'
+          }}
           variant='filled'
         >
-          {t(message)
-            .split(', ')
-            .map((line) => (
-              <Box key={line}>{line}</Box>
-            ))}
+          {renderMessage(message)}
         </Alert>
       </Snackbar>
     </SnackBarContext.Provider>
