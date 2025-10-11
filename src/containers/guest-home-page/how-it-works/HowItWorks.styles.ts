@@ -10,5 +10,9 @@ export const styles = {
     mb: '45px',
     flexDirection: { sm: 'row', xs: 'column' }
   },
-  title: { mb: '32px', typography: 'h3' }
+  title: {
+    mb: { xs: 3, md: 4 },
+    typography: 'h4',
+    fontSize: { xs: '32px', md: '48px' }
+  }
 }
