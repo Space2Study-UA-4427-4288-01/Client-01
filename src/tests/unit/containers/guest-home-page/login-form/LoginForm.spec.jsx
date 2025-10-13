@@ -82,6 +82,87 @@ describe('Login form test', () => {
 
     await waitFor(() => expect(backBtn).toBeInTheDocument())
   })
+
+  it('should enable login button when email and password are provided and no errors', () => {
+    const button = screen.getByText('common.labels.login')
+
+    expect(button).toBeEnabled()
+  })
+})
+
+describe('Login form validation tests', () => {
+  const preloadedState = { appMain: { authLoading: false } }
+
+  it('should disable login button when email is empty', () => {
+    const emptyEmailData = { email: '', password: 'passTest1' }
+    renderWithProviders(
+      <LoginForm
+        data={emptyEmailData}
+        errors={errors}
+        handleBlur={handleBlur}
+        handleChange={handleChange}
+        handleSubmit={handleSubmit}
+      />,
+      { preloadedState }
+    )
+
+    const button = screen.getByText('common.labels.login')
+    expect(button).toBeDisabled()
+  })
+
+  it('should disable login button when password is empty', () => {
+    const emptyPasswordData = { email: 'email@mail.com', password: '' }
+    renderWithProviders(
+      <LoginForm
+        data={emptyPasswordData}
+        errors={errors}
+        handleBlur={handleBlur}
+        handleChange={handleChange}
+        handleSubmit={handleSubmit}
+      />,
+      { preloadedState }
+    )
+
+    const button = screen.getByText('common.labels.login')
+    expect(button).toBeDisabled()
+  })
+
+  it('should disable login button when both email and password are empty', () => {
+    const emptyData = { email: '', password: '' }
+    renderWithProviders(
+      <LoginForm
+        data={emptyData}
+        errors={errors}
+        handleBlur={handleBlur}
+        handleChange={handleChange}
+        handleSubmit={handleSubmit}
+      />,
+      { preloadedState }
+    )
+
+    const button = screen.getByText('common.labels.login')
+    expect(button).toBeDisabled()
+  })
+
+  it('should disable login button when email has validation errors', () => {
+    const errorsWithEmailError = {
+      email: 'Invalid email format',
+      password: false
+    }
+    renderWithProviders(
+      <LoginForm
+        data={data}
+        errors={errorsWithEmailError}
+        handleBlur={handleBlur}
+        handleChange={handleChange}
+        handleSubmit={handleSubmit}
+      />,
+      { preloadedState }
+    )
+
+    const button = screen.getByText('common.labels.login')
+    expect(button).toBeDisabled()
+  })
 })
 
 describe('Login form test with loading', () => {
