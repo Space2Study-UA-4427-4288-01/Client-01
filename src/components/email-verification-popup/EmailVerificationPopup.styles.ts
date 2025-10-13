@@ -1,8 +1,9 @@
 export const styles = {
   dialogPaper: {
     borderRadius: '8px',
-    width: '744px',
-    height: '396px',
+    width: { xs: '90vw', sm: '600px', md: '744px' },
+    minHeight: '396px',
+    maxHeight: '90vh',
     margin: '16px',
     backgroundColor: '#FFFFFF',
     boxShadow: '0px 8px 32px rgba(0, 0, 0, 0.1)'
