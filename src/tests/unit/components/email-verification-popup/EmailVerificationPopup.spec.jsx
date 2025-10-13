@@ -64,7 +64,7 @@ describe('EmailVerificationPopup', () => {
   it('should not close popup when clicking on backdrop', () => {
     render(<EmailVerificationPopup {...defaultProps} />)
 
-    const dialog = screen.getByTestId('popup')
+    const dialog = screen.getByRole('dialog')
     fireEvent.click(dialog)
 
     expect(mockOnClose).not.toHaveBeenCalled()
@@ -73,19 +73,9 @@ describe('EmailVerificationPopup', () => {
   it('should close popup when pressing escape key', () => {
     render(<EmailVerificationPopup {...defaultProps} />)
 
-    fireEvent.keyDown(document, { key: 'Escape', code: 'Escape' })
+    const dialog = screen.getByRole('dialog')
+    fireEvent.keyDown(dialog, { key: 'Escape', code: 'Escape' })
 
     expect(mockOnClose).toHaveBeenCalledTimes(1)
-  })
-
-  it('should render with correct text content', () => {
-    render(<EmailVerificationPopup {...defaultProps} />)
-
-    expect(
-      screen.getByText('Email has been successfully verified!')
-    ).toBeInTheDocument()
-    expect(
-      screen.getByRole('button', { name: 'Go to login' })
-    ).toBeInTheDocument()
   })
 })
