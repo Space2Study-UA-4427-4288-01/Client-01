@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import useInputVisibility from '~/hooks/use-input-visibility'
 import { useSelector } from 'react-redux'
+import PropTypes from 'prop-types'
 
 import Box from '@mui/material/Box'
 import ButtonBase from '@mui/material/ButtonBase'
@@ -31,6 +32,8 @@ const LoginForm = ({
   const openForgotPassword = () => {
     openModal({ component: <ForgotPassword /> })
   }
+
+  const isFormInvalid = !data.email || !data.password || !!errors.email
 
   return (
     <Box component='form' onSubmit={handleSubmit} sx={styles.form}>
@@ -71,11 +74,30 @@ const LoginForm = ({
         {t('login.forgotPassword')}
       </Typography>
 
-      <AppButton loading={authLoading} sx={styles.loginButton} type='submit'>
+      <AppButton
+        disabled={isFormInvalid}
+        loading={authLoading}
+        sx={styles.loginButton}
+        type='submit'
+      >
         {t('common.labels.login')}
       </AppButton>
     </Box>
   )
+}
+
+LoginForm.propTypes = {
+  handleSubmit: PropTypes.func.isRequired,
+  handleChange: PropTypes.func.isRequired,
+  handleBlur: PropTypes.func.isRequired,
+  data: PropTypes.shape({
+    email: PropTypes.string,
+    password: PropTypes.string
+  }).isRequired,
+  errors: PropTypes.shape({
+    email: PropTypes.string,
+    password: PropTypes.string
+  }).isRequired
 }
 
 export default LoginForm
