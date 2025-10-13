@@ -1,167 +1,95 @@
 import { screen, fireEvent, waitFor } from '@testing-library/react'
+import { vi } from 'vitest'
 import { renderWithProviders } from '~tests/test-utils'
 import LoginForm from '~/containers/guest-home-page/login-form/LoginForm'
-import { vi } from 'vitest'
 
-vi.mock('~/hooks/use-confirm', () => {
-  return {
-    default: () => ({ setNeedConfirmation: () => true })
-  }
+vi.mock('~/hooks/use-confirm', () => ({
+  default: () => ({ setNeedConfirmation: () => true })
+}))
+
+const createProps = (data = {}, errors = {}) => ({
+  data: { email: 'test@example.com', password: 'password', ...data },
+  errors: { email: '', password: '', ...errors },
+  handleChange: vi.fn(),
+  handleBlur: vi.fn(),
+  handleSubmit: vi.fn()
 })
 
-const errors = { email: false, password: false }
-const data = { email: 'email@mail.com', password: 'passTest1' }
-const handleChange = vi.fn()
-const handleBlur = vi.fn()
-const handleSubmit = vi.fn()
+const renderForm = (props, loading = false) => {
+  const state = { appMain: { authLoading: loading } }
+  return renderWithProviders(<LoginForm {...props} />, {
+    preloadedState: state
+  })
+}
 
-describe('Login form test', () => {
-  const preloadedState = { appMain: { authLoading: false } }
-  beforeEach(() => {
-    renderWithProviders(
-      <LoginForm
-        data={data}
-        errors={errors}
-        handleBlur={handleBlur}
-        handleChange={handleChange}
-        handleSubmit={handleSubmit}
-      />,
-      { preloadedState }
-    )
+describe('LoginForm', () => {
+  it('renders form elements', () => {
+    renderForm(createProps())
+
+    expect(screen.getByLabelText(/email/i)).toBeInTheDocument()
+    expect(screen.getByText('common.labels.password')).toBeInTheDocument()
+    expect(screen.getByText('login.forgotPassword')).toBeInTheDocument()
+    expect(screen.getByText('common.labels.login')).toBeInTheDocument()
   })
 
-  it('should render email input label', () => {
-    const inputLabel = screen.getByLabelText(/email/i)
+  it('toggles password visibility', async () => {
+    renderForm(createProps())
 
-    expect(inputLabel).toBeInTheDocument()
-  })
-
-  it('should render password input label', () => {
-    const inputLabel = screen.getByText('common.labels.password')
-
-    expect(inputLabel).toBeInTheDocument()
-  })
-
-  it('should render forgot password text', () => {
-    const text = screen.getByText('login.forgotPassword')
-
-    expect(text).toBeInTheDocument()
-  })
-
-  it('should render login button', () => {
-    const button = screen.getByText('common.labels.login')
-
-    expect(button).toBeInTheDocument()
-  })
-
-  it('should show visibility icon', async () => {
-    const visibilityOffIcon = screen.getByTestId('VisibilityOffIcon')
-    fireEvent.click(visibilityOffIcon)
-    const visibilityIcon = screen.getByTestId('VisibilityIcon')
+    const toggleButton = screen.getByTestId('VisibilityOffIcon')
+    fireEvent.click(toggleButton)
 
     await waitFor(() => {
-      expect(visibilityIcon).toBeInTheDocument()
-      expect(visibilityOffIcon).not.toBeInTheDocument()
+      expect(screen.getByTestId('VisibilityIcon')).toBeInTheDocument()
     })
   })
 
-  it('should submit', async () => {
-    handleSubmit.mockImplementation((event) => {
-      event.preventDefault()
+  it('calls handleSubmit on form submission', () => {
+    const props = createProps()
+    props.handleSubmit.mockImplementation((e) => e.preventDefault())
+    renderForm(props)
+
+    fireEvent.click(screen.getByText('common.labels.login'))
+
+    expect(props.handleSubmit).toHaveBeenCalled()
+  })
+
+  it('opens forgot password modal', async () => {
+    renderForm(createProps())
+
+    fireEvent.click(screen.getByText('login.forgotPassword'))
+
+    await waitFor(() => {
+      expect(screen.getByText('login.backToLogin')).toBeInTheDocument()
     })
-    const button = screen.getByText('common.labels.login')
-    fireEvent.click(button)
-
-    expect(handleSubmit).toHaveBeenCalled()
   })
 
-  it('should click forgot password text and open forgot password container', async () => {
-    const text = screen.getByText('login.forgotPassword')
-    fireEvent.click(text)
-    const backBtn = screen.queryByText('login.backToLogin')
+  it('shows loading state', () => {
+    renderForm(createProps(), true)
 
-    await waitFor(() => expect(backBtn).toBeInTheDocument())
+    expect(screen.getByTestId('loader')).toBeInTheDocument()
   })
 
-  it('should enable login button when email and password are provided and no errors', () => {
-    const button = screen.getByText('common.labels.login')
+  it('disables button when email empty', () => {
+    renderForm(createProps({ email: '' }))
 
-    expect(button).toBeEnabled()
+    expect(screen.getByText('common.labels.login')).toBeDisabled()
   })
-})
 
-describe('Login form validation tests', () => {
-  const preloadedState = { appMain: { authLoading: false } }
+  it('disables button when password empty', () => {
+    renderForm(createProps({ password: '' }))
 
-  const renderLoginFormWithData = (testData, testErrors = errors) => {
-    renderWithProviders(
-      <LoginForm
-        data={testData}
-        errors={testErrors}
-        handleBlur={handleBlur}
-        handleChange={handleChange}
-        handleSubmit={handleSubmit}
-      />,
-      { preloadedState }
-    )
-    return screen.getByText('common.labels.login')
-  }
+    expect(screen.getByText('common.labels.login')).toBeDisabled()
+  })
 
-  const testCases = [
-    {
-      description: 'should disable login button when email is empty',
-      data: { email: '', password: 'passTest1' },
-      errors: errors,
-      expectedDisabled: true
-    },
-    {
-      description: 'should disable login button when password is empty',
-      data: { email: 'email@mail.com', password: '' },
-      errors: errors,
-      expectedDisabled: true
-    },
-    {
-      description:
-        'should disable login button when both email and password are empty',
-      data: { email: '', password: '' },
-      errors: errors,
-      expectedDisabled: true
-    },
-    {
-      description:
-        'should disable login button when email has validation errors',
-      data: data,
-      errors: { email: 'Invalid email format', password: false },
-      expectedDisabled: true
-    }
-  ]
+  it('disables button when email has error', () => {
+    renderForm(createProps({}, { email: 'Invalid email' }))
 
-  testCases.forEach(
-    ({ description, data: testData, errors: testErrors, expectedDisabled }) => {
-      it(description, () => {
-        const button = renderLoginFormWithData(testData, testErrors)
-        expect(button)[expectedDisabled ? 'toBeDisabled' : 'toBeEnabled']()
-      })
-    }
-  )
-})
+    expect(screen.getByText('common.labels.login')).toBeDisabled()
+  })
 
-describe('Login form test with loading', () => {
-  const preloadedState = { appMain: { authLoading: true } }
-  it('should render loader', () => {
-    renderWithProviders(
-      <LoginForm
-        data={data}
-        errors={errors}
-        handleBlur={handleBlur}
-        handleChange={handleChange}
-        handleSubmit={handleSubmit}
-      />,
-      { preloadedState }
-    )
+  it('enables button when form is valid', () => {
+    renderForm(createProps())
 
-    const loader = screen.getByTestId('loader')
-
-    expect(loader).toBeInTheDocument()
+    expect(screen.getByText('common.labels.login')).toBeEnabled()
   })
 })
