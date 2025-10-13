@@ -93,76 +93,57 @@ describe('Login form test', () => {
 describe('Login form validation tests', () => {
   const preloadedState = { appMain: { authLoading: false } }
 
-  it('should disable login button when email is empty', () => {
-    const emptyEmailData = { email: '', password: 'passTest1' }
+  const renderLoginFormWithData = (testData, testErrors = errors) => {
     renderWithProviders(
       <LoginForm
-        data={emptyEmailData}
-        errors={errors}
+        data={testData}
+        errors={testErrors}
         handleBlur={handleBlur}
         handleChange={handleChange}
         handleSubmit={handleSubmit}
       />,
       { preloadedState }
     )
+    return screen.getByText('common.labels.login')
+  }
 
-    const button = screen.getByText('common.labels.login')
-    expect(button).toBeDisabled()
-  })
-
-  it('should disable login button when password is empty', () => {
-    const emptyPasswordData = { email: 'email@mail.com', password: '' }
-    renderWithProviders(
-      <LoginForm
-        data={emptyPasswordData}
-        errors={errors}
-        handleBlur={handleBlur}
-        handleChange={handleChange}
-        handleSubmit={handleSubmit}
-      />,
-      { preloadedState }
-    )
-
-    const button = screen.getByText('common.labels.login')
-    expect(button).toBeDisabled()
-  })
-
-  it('should disable login button when both email and password are empty', () => {
-    const emptyData = { email: '', password: '' }
-    renderWithProviders(
-      <LoginForm
-        data={emptyData}
-        errors={errors}
-        handleBlur={handleBlur}
-        handleChange={handleChange}
-        handleSubmit={handleSubmit}
-      />,
-      { preloadedState }
-    )
-
-    const button = screen.getByText('common.labels.login')
-    expect(button).toBeDisabled()
-  })
-
-  it('should disable login button when email has validation errors', () => {
-    const errorsWithEmailError = {
-      email: 'Invalid email format',
-      password: false
+  const testCases = [
+    {
+      description: 'should disable login button when email is empty',
+      data: { email: '', password: 'passTest1' },
+      errors: errors,
+      expectedDisabled: true
+    },
+    {
+      description: 'should disable login button when password is empty',
+      data: { email: 'email@mail.com', password: '' },
+      errors: errors,
+      expectedDisabled: true
+    },
+    {
+      description:
+        'should disable login button when both email and password are empty',
+      data: { email: '', password: '' },
+      errors: errors,
+      expectedDisabled: true
+    },
+    {
+      description:
+        'should disable login button when email has validation errors',
+      data: data,
+      errors: { email: 'Invalid email format', password: false },
+      expectedDisabled: true
     }
-    renderWithProviders(
-      <LoginForm
-        data={data}
-        errors={errorsWithEmailError}
-        handleBlur={handleBlur}
-        handleChange={handleChange}
-        handleSubmit={handleSubmit}
-      />,
-      { preloadedState }
-    )
+  ]
 
-    const button = screen.getByText('common.labels.login')
-    expect(button).toBeDisabled()
-  })
+  testCases.forEach(
+    ({ description, data: testData, errors: testErrors, expectedDisabled }) => {
+      it(description, () => {
+        const button = renderLoginFormWithData(testData, testErrors)
+        expect(button)[expectedDisabled ? 'toBeDisabled' : 'toBeEnabled']()
+      })
+    }
+  )
 })
 
 describe('Login form test with loading', () => {
