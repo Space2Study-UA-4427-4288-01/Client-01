@@ -74,10 +74,10 @@ describe('InfoPopup', () => {
     )
 
     expect(
-      screen.getByText((content, element) => {
+      screen.getByText((_content, element) => {
         return (
           element?.textContent ===
-          'Test message. Check your email and click on the confirmation button to continue'
+            'Test message. Check your email and click on the confirmation button to continue'
         )
       })
     ).toBeInTheDocument()
@@ -95,10 +95,10 @@ describe('InfoPopup', () => {
     expect(screen.getByText('Test Title')).toBeInTheDocument()
     expect(screen.getByText('test@example.com')).toBeInTheDocument()
     expect(
-      screen.getByText((content, element) => {
+      screen.getByText((_content, element) => {
         return (
           element?.textContent ===
-          'Test message test@example.com. Check your email and click on the confirmation button to continue'
+            'Test message test@example.com. Check your email and click on the confirmation button to continue'
         )
       })
     ).toBeInTheDocument()
