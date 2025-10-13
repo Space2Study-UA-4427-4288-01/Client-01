@@ -22,10 +22,11 @@ const EmailVerificationPopup: FC<EmailVerificationPopupProps> = ({
   onClose,
   onGoToLogin
 }) => {
-  const handleBackdropClick = (event: React.MouseEvent<HTMLDivElement>) => {
-    if (event.target === event.currentTarget) {
+  const handleBackdropClick = (_event: unknown, reason: string) => {
+    if (reason === 'backdropClick') {
       return
     }
+    onClose()
   }
 
   return (
