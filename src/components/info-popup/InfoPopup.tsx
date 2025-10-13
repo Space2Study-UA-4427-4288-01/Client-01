@@ -12,6 +12,7 @@ import InfoIcon from '~/assets/img/guest-home-page/info.svg'
 import { styles } from '~/components/info-popup/InfoPopup.styles'
 
 interface InfoPopupProps {
+  confirmationText?: string
   email?: string
   message: string
   onClose: () => void
@@ -20,16 +21,18 @@ interface InfoPopupProps {
 }
 
 const InfoPopup: FC<InfoPopupProps> = ({
+  confirmationText,
   email,
   message,
   onClose,
   open,
   title
 }) => {
-  const handleBackdropClick = (event: React.MouseEvent<HTMLDivElement>) => {
-    if (event.target === event.currentTarget) {
+  const handleBackdropClick = (_event: unknown, reason: string) => {
+    if (reason === 'backdropClick') {
       return
     }
+    onClose()
   }
 
   return (
@@ -66,8 +69,8 @@ const InfoPopup: FC<InfoPopupProps> = ({
 
         <Typography sx={styles.message}>
           {message}
-          {email && <strong> {email}</strong>}. Check your email and click on
-          the confirmation button to continue.
+          {email && <strong> {email}</strong>}
+          {confirmationText && `. ${confirmationText}`}
         </Typography>
 
         <Button
