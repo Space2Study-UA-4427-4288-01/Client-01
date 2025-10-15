@@ -56,7 +56,7 @@ describe('EmailVerificationPopup', () => {
   it('should display success icon', () => {
     render(<EmailVerificationPopup {...defaultProps} />)
 
-    const successIcon = screen.getByAltText('success')
+    const successIcon = screen.getByAltText('Email verification success icon')
     expect(successIcon).toBeInTheDocument()
     expect(successIcon).toHaveAttribute('src')
   })
