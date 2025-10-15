@@ -46,6 +46,7 @@ const EmailVerificationPopup: FC<EmailVerificationPopupProps> = ({
     >
       <DialogContent sx={styles.dialogContent}>
         <IconButton
+          aria-label='Close email verification popup'
           data-testid='close-button'
           onClick={onClose}
           sx={styles.closeButton}
@@ -54,7 +55,7 @@ const EmailVerificationPopup: FC<EmailVerificationPopupProps> = ({
         </IconButton>
 
         <Box sx={styles.iconContainer}>
-          <img alt='success' src={SuccessIcon} style={styles.successIcon} />
+          <img alt='Email verification success icon' src={SuccessIcon} style={styles.successIcon} />
         </Box>
 
         <Typography sx={styles.title} variant='h6'>
