@@ -55,7 +55,11 @@ const EmailVerificationPopup: FC<EmailVerificationPopupProps> = ({
         </IconButton>
 
         <Box sx={styles.iconContainer}>
-          <img alt='Email verification success icon' src={SuccessIcon} style={styles.successIcon} />
+          <img
+            alt='Email verification success icon'
+            src={SuccessIcon}
+            style={styles.successIcon}
+          />
         </Box>
 
         <Typography sx={styles.title} variant='h6'>
