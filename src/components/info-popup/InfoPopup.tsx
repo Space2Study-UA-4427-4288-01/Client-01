@@ -46,11 +46,11 @@ const InfoPopup: FC<InfoPopupProps> = ({ email, onClose, open }) => {
 
   return (
     <Dialog
+      PaperProps={{ sx: styles.dialogPaper }}
       fullWidth={false}
       maxWidth={false}
       onClose={handleBackdropClick}
       open={open}
-      PaperProps={{ sx: styles.dialogPaper }}
       slotProps={{
         backdrop: {
           sx: styles.backdrop
