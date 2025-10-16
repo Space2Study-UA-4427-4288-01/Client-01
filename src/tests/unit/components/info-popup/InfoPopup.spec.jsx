@@ -102,13 +102,13 @@ describe('InfoPopup', () => {
     expect(mockOnClose).not.toHaveBeenCalled()
   })
 
-  it('should handle escape key through MUI Dialog', () => {
+  it('should call onClose when Escape key is pressed', () => {
     render(<InfoPopup {...defaultProps} />)
 
     const dialog = screen.getByRole('dialog')
-    expect(dialog).toBeInTheDocument()
+    fireEvent.keyDown(dialog, { key: 'Escape', code: 'Escape' })
 
-    expect(dialog).toHaveClass('MuiDialog-paper')
+    expect(mockOnClose).toHaveBeenCalledTimes(1)
   })
 
   it('should have proper accessibility attributes', () => {
@@ -126,6 +126,7 @@ describe('InfoPopup', () => {
 
     const dialog = screen.getByRole('dialog')
     expect(dialog).toBeInTheDocument()
+    expect(dialog).toHaveClass('MuiDialog-paper')
     expect(dialog.closest('[role="dialog"]')).toBeInTheDocument()
   })
 
