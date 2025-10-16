@@ -49,7 +49,9 @@ describe('InfoPopup', () => {
 
     expect(screen.queryByText(TEST_CONSTANTS.TITLE)).not.toBeInTheDocument()
     expect(screen.queryByText(TEST_CONSTANTS.OK_BUTTON)).not.toBeInTheDocument()
-    expect(screen.queryByTestId(TEST_CONSTANTS.CLOSE_BUTTON_TEST_ID)).not.toBeInTheDocument()
+    expect(
+      screen.queryByTestId(TEST_CONSTANTS.CLOSE_BUTTON_TEST_ID)
+    ).not.toBeInTheDocument()
   })
 
   it('should display email when provided', () => {
@@ -68,7 +70,9 @@ describe('InfoPopup', () => {
       screen.queryByText(TEST_CONSTANTS.TEST_EMAIL)
     ).not.toBeInTheDocument()
     expect(
-      screen.getByText(/Please check your email and click on the confirmation button to continue/)
+      screen.getByText(
+        /Please check your email and click on the confirmation button to continue/
+      )
     ).toBeInTheDocument()
     expect(
       screen.queryByText(/We sent a confirmation email to:/)
@@ -149,7 +153,9 @@ describe('InfoPopup', () => {
     render(<InfoPopup {...defaultProps} email='' />)
 
     expect(
-      screen.getByText(/Please check your email and click on the confirmation button to continue/)
+      screen.getByText(
+        /Please check your email and click on the confirmation button to continue/
+      )
     ).toBeInTheDocument()
     expect(
       screen.queryByText(/We sent a confirmation email to:/)
