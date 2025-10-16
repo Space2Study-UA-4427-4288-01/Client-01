@@ -1,18 +1,56 @@
+const COLORS = {
+  WHITE: '#FFFFFF',
+  BLACK: '#000000',
+  TITLE: '#29313D',
+  MESSAGE: '#666666',
+  BUTTON_BG: '#263238',
+  BUTTON_HOVER: '#1a2529',
+  BUTTON_ACTIVE: '#0f1416',
+  BACKDROP: 'rgba(38, 50, 56, 0.75)',
+  HOVER_OVERLAY: 'rgba(0, 0, 0, 0.04)',
+  SHADOW: 'rgba(0, 0, 0, 0.1)',
+  BUTTON_SHADOW: 'rgba(144, 164, 174, 0.12)',
+  BUTTON_SHADOW_HOVER: 'rgba(144, 164, 174, 0.16)'
+} as const
+
+const SIZES = {
+  BORDER_RADIUS: '8px',
+  ICON_SIZE: '96px',
+  BUTTON_HEIGHT: '56px',
+  CLOSE_BUTTON_SIZE: '48px',
+  TITLE_FONT_SIZE: '24px',
+  MESSAGE_FONT_SIZE: '16px',
+  MESSAGE_LINE_HEIGHT: '24px',
+  BUTTON_FONT_SIZE: '16px'
+} as const
+
+const SPACING = {
+  SMALL: '12px',
+  MEDIUM: '16px',
+  LARGE: '24px',
+  XLARGE: '32px',
+  ICON_MARGIN_TOP: '65px',
+  ICON_MARGIN_BOTTOM: '23px',
+  TITLE_MARGIN_BOTTOM: '18px',
+  MESSAGE_MARGIN_BOTTOM: '30px',
+  BUTTON_MARGIN_BOTTOM: '50px'
+} as const
+
 export const styles = {
   dialogPaper: {
-    borderRadius: '8px',
+    borderRadius: SIZES.BORDER_RADIUS,
     width: { xs: '90vw', sm: '600px', md: '744px' },
     minHeight: '448px',
     maxHeight: '90vh',
-    backgroundColor: '#FFFFFF',
-    boxShadow: '0px 8px 32px rgba(0, 0, 0, 0.1)'
+    backgroundColor: COLORS.WHITE,
+    boxShadow: `0px 8px 32px ${COLORS.SHADOW}`
   },
   backdrop: {
-    backgroundColor: 'rgba(38, 50, 56, 0.75)',
+    backgroundColor: COLORS.BACKDROP,
     backdropFilter: 'blur(4px)'
   },
   dialogContent: {
-    padding: '16px 24px 0 24px',
+    padding: `${SPACING.MEDIUM} ${SPACING.LARGE} 0 ${SPACING.LARGE}`,
     position: 'relative',
     display: 'flex',
     flexDirection: 'column',
@@ -25,39 +63,39 @@ export const styles = {
   closeButton: {
     position: 'absolute',
     top: '15px',
-    right: '16px',
-    width: '48px',
-    height: '48px',
-    minWidth: '48px',
+    right: SPACING.MEDIUM,
+    width: SIZES.CLOSE_BUTTON_SIZE,
+    height: SIZES.CLOSE_BUTTON_SIZE,
+    minWidth: SIZES.CLOSE_BUTTON_SIZE,
     borderRadius: '100px',
-    color: '#000000',
+    color: COLORS.BLACK,
     backgroundColor: 'transparent',
-    padding: '12px',
+    padding: SPACING.SMALL,
     '&:hover': {
-      backgroundColor: 'rgba(0, 0, 0, 0.04)'
+      backgroundColor: COLORS.HOVER_OVERLAY
     },
     '& .MuiSvgIcon-root': {
-      fontSize: '24px'
+      fontSize: SIZES.TITLE_FONT_SIZE
     }
   },
   iconContainer: {
-    marginTop: '65px',
-    marginBottom: '23px',
+    marginTop: SPACING.ICON_MARGIN_TOP,
+    marginBottom: SPACING.ICON_MARGIN_BOTTOM,
     marginLeft: '-10px',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center'
   },
   infoIcon: {
-    width: '96px',
-    height: '96px',
+    width: SIZES.ICON_SIZE,
+    height: SIZES.ICON_SIZE,
     display: 'block'
   },
   title: {
-    marginBottom: '18px',
-    color: '#29313D',
+    marginBottom: SPACING.TITLE_MARGIN_BOTTOM,
+    color: COLORS.TITLE,
     fontWeight: 500,
-    fontSize: '24px',
+    fontSize: SIZES.TITLE_FONT_SIZE,
     lineHeight: '120%',
     fontFamily: 'Rubik, sans-serif',
     letterSpacing: '0px',
@@ -69,10 +107,10 @@ export const styles = {
     marginLeft: '-15px'
   },
   message: {
-    marginBottom: '30px',
-    color: '#666666',
-    fontSize: '16px',
-    lineHeight: '24px',
+    marginBottom: SPACING.MESSAGE_MARGIN_BOTTOM,
+    color: COLORS.MESSAGE,
+    fontSize: SIZES.MESSAGE_FONT_SIZE,
+    lineHeight: SIZES.MESSAGE_LINE_HEIGHT,
     letterSpacing: '0.5px',
     fontFamily: 'Rubik, sans-serif',
     fontWeight: 400,
@@ -84,28 +122,26 @@ export const styles = {
     }
   },
   okButton: {
-    backgroundColor: '#263238',
-    color: '#FFFFFF',
-    height: '56px',
-    padding: '16px 32px',
+    backgroundColor: COLORS.BUTTON_BG,
+    color: COLORS.WHITE,
+    height: SIZES.BUTTON_HEIGHT,
+    padding: `${SPACING.MEDIUM} ${SPACING.XLARGE}`,
     borderRadius: '4px',
     minWidth: '86px',
-    fontSize: '16px',
+    fontSize: SIZES.BUTTON_FONT_SIZE,
     fontWeight: 500,
     fontFamily: 'Rubik, sans-serif',
-    lineHeight: '24px',
+    lineHeight: SIZES.BUTTON_FONT_SIZE,
     letterSpacing: '0.5px',
     textTransform: 'none',
-    marginBottom: '50px',
-    boxShadow:
-      '0px 3px 16px rgba(144, 164, 174, 0.12), 0px 9px 12px rgba(144, 164, 174, 0.14)',
+    marginBottom: SPACING.BUTTON_MARGIN_BOTTOM,
+    boxShadow: `0px 3px 16px ${COLORS.BUTTON_SHADOW}, 0px 9px 12px ${COLORS.BUTTON_SHADOW}`,
     '&:hover': {
-      backgroundColor: '#1a2529',
-      boxShadow:
-        '0px 3px 16px rgba(144, 164, 174, 0.16), 0px 9px 12px rgba(144, 164, 174, 0.18)'
+      backgroundColor: COLORS.BUTTON_HOVER,
+      boxShadow: `0px 3px 16px ${COLORS.BUTTON_SHADOW_HOVER}, 0px 9px 12px ${COLORS.BUTTON_SHADOW_HOVER}`
     },
     '&:active': {
-      backgroundColor: '#0f1416',
+      backgroundColor: COLORS.BUTTON_ACTIVE,
       transform: 'translateY(1px)'
     }
   }
