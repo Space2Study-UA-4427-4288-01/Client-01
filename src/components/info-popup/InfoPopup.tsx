@@ -16,6 +16,8 @@ const TEXTS = {
   MESSAGE_START: 'We sent a confirmation email to:',
   MESSAGE_END:
     'Check your email and click on the confirmation button to continue.',
+  MESSAGE_WITHOUT_EMAIL:
+    'Please check your email and click on the confirmation button to continue.',
   OK_BUTTON: 'OK',
   CLOSE_BUTTON_LABEL: 'Close info popup',
   OK_BUTTON_LABEL: 'Close popup and continue',
@@ -80,8 +82,14 @@ const InfoPopup: FC<InfoPopupProps> = ({ email, onClose, open }) => {
         </Typography>
 
         <Typography sx={styles.message}>
-          {TEXTS.MESSAGE_START} {email && <strong>{email}</strong>}.{' '}
-          {TEXTS.MESSAGE_END}
+          {email ? (
+            <>
+              {TEXTS.MESSAGE_START} <strong>{email}</strong>.{' '}
+              {TEXTS.MESSAGE_END}
+            </>
+          ) : (
+            TEXTS.MESSAGE_WITHOUT_EMAIL
+          )}
         </Typography>
 
         <Button
