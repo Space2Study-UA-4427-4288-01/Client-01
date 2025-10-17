@@ -36,6 +36,33 @@ const renderWithRouter = (component) => {
   return render(<BrowserRouter>{component}</BrowserRouter>)
 }
 
+const expectAllElementsPresent = () => {
+  expect(screen.getByText(TEST_CONSTANTS.TITLE)).toBeInTheDocument()
+  expect(screen.getByText(TEST_CONSTANTS.MESSAGE)).toBeInTheDocument()
+  expect(screen.getByText(TEST_CONSTANTS.YES_BUTTON)).toBeInTheDocument()
+  expect(screen.getByText(TEST_CONSTANTS.NO_BUTTON)).toBeInTheDocument()
+  expect(
+    screen.getByTestId(TEST_CONSTANTS.CLOSE_BUTTON_TEST_ID)
+  ).toBeInTheDocument()
+  expect(
+    screen.getByTestId(TEST_CONSTANTS.CONFIRM_BUTTON_TEST_ID)
+  ).toBeInTheDocument()
+  expect(
+    screen.getByTestId(TEST_CONSTANTS.CANCEL_BUTTON_TEST_ID)
+  ).toBeInTheDocument()
+  expect(screen.getByRole('dialog')).toBeInTheDocument()
+}
+
+const expectDialogClosed = () => {
+  expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+  expect(screen.queryByText(TEST_CONSTANTS.TITLE)).not.toBeInTheDocument()
+}
+
+const expectDialogOpen = () => {
+  expect(screen.getByRole('dialog')).toBeInTheDocument()
+  expect(screen.getByText(TEST_CONSTANTS.TITLE)).toBeInTheDocument()
+}
+
 describe('CloseConfirmationDialog', () => {
   const renderDialog = (props = {}) => {
     return renderWithRouter(
@@ -56,31 +83,12 @@ describe('CloseConfirmationDialog', () => {
 
   it('should render when open is true', () => {
     renderDialog()
-
-    expect(screen.getByText(TEST_CONSTANTS.TITLE)).toBeInTheDocument()
-    expect(screen.getByText(TEST_CONSTANTS.MESSAGE)).toBeInTheDocument()
-    expect(screen.getByText(TEST_CONSTANTS.YES_BUTTON)).toBeInTheDocument()
-    expect(screen.getByText(TEST_CONSTANTS.NO_BUTTON)).toBeInTheDocument()
-    expect(
-      screen.getByTestId(TEST_CONSTANTS.CLOSE_BUTTON_TEST_ID)
-    ).toBeInTheDocument()
-    expect(
-      screen.getByTestId(TEST_CONSTANTS.CONFIRM_BUTTON_TEST_ID)
-    ).toBeInTheDocument()
-    expect(
-      screen.getByTestId(TEST_CONSTANTS.CANCEL_BUTTON_TEST_ID)
-    ).toBeInTheDocument()
+    expectAllElementsPresent()
   })
 
   it('should not render when open is false', () => {
     renderDialog({ open: false })
-
-    expect(screen.queryByText(TEST_CONSTANTS.TITLE)).not.toBeInTheDocument()
-    expect(screen.queryByText(TEST_CONSTANTS.MESSAGE)).not.toBeInTheDocument()
-    expect(
-      screen.queryByText(TEST_CONSTANTS.YES_BUTTON)
-    ).not.toBeInTheDocument()
-    expect(screen.queryByText(TEST_CONSTANTS.NO_BUTTON)).not.toBeInTheDocument()
+    expectDialogClosed()
   })
 
   it('should call onDismiss when close button is clicked', () => {
@@ -113,7 +121,6 @@ describe('CloseConfirmationDialog', () => {
 
   it('should not close popup when clicking on backdrop', () => {
     renderDialog()
-    const { dialog } = getElements()
 
     const backdrop = document.querySelector('.MuiBackdrop-root')
     if (backdrop) {
@@ -121,7 +128,7 @@ describe('CloseConfirmationDialog', () => {
     }
 
     expect(mockOnDismiss).not.toHaveBeenCalled()
-    expect(dialog).toBeInTheDocument()
+    expectDialogOpen()
   })
 
   it('should call onDismiss when Escape key is pressed', () => {
