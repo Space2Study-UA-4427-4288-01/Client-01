@@ -37,12 +37,25 @@ const renderWithRouter = (component) => {
 }
 
 describe('CloseConfirmationDialog', () => {
+  const renderDialog = (props = {}) => {
+    return renderWithRouter(
+      <CloseConfirmationDialog {...defaultProps} {...props} />
+    )
+  }
+
+  const getElements = () => ({
+    closeButton: screen.getByTestId(TEST_CONSTANTS.CLOSE_BUTTON_TEST_ID),
+    confirmButton: screen.getByTestId(TEST_CONSTANTS.CONFIRM_BUTTON_TEST_ID),
+    cancelButton: screen.getByTestId(TEST_CONSTANTS.CANCEL_BUTTON_TEST_ID),
+    dialog: screen.getByRole('dialog')
+  })
+
   beforeEach(() => {
     vi.clearAllMocks()
   })
 
   it('should render when open is true', () => {
-    renderWithRouter(<CloseConfirmationDialog {...defaultProps} />)
+    renderDialog()
 
     expect(screen.getByText(TEST_CONSTANTS.TITLE)).toBeInTheDocument()
     expect(screen.getByText(TEST_CONSTANTS.MESSAGE)).toBeInTheDocument()
@@ -60,7 +73,7 @@ describe('CloseConfirmationDialog', () => {
   })
 
   it('should not render when open is false', () => {
-    renderWithRouter(<CloseConfirmationDialog {...defaultProps} open={false} />)
+    renderDialog({ open: false })
 
     expect(screen.queryByText(TEST_CONSTANTS.TITLE)).not.toBeInTheDocument()
     expect(screen.queryByText(TEST_CONSTANTS.MESSAGE)).not.toBeInTheDocument()
@@ -71,59 +84,58 @@ describe('CloseConfirmationDialog', () => {
   })
 
   it('should call onDismiss when close button is clicked', () => {
-    renderWithRouter(<CloseConfirmationDialog {...defaultProps} />)
+    renderDialog()
+    const { closeButton } = getElements()
 
-    const closeButton = screen.getByTestId(TEST_CONSTANTS.CLOSE_BUTTON_TEST_ID)
     fireEvent.click(closeButton)
 
     expect(mockOnDismiss).toHaveBeenCalledTimes(1)
   })
 
   it('should call onDismiss when No button is clicked', () => {
-    renderWithRouter(<CloseConfirmationDialog {...defaultProps} />)
+    renderDialog()
+    const { cancelButton } = getElements()
 
-    const noButton = screen.getByTestId(TEST_CONSTANTS.CANCEL_BUTTON_TEST_ID)
-    fireEvent.click(noButton)
+    fireEvent.click(cancelButton)
 
     expect(mockOnDismiss).toHaveBeenCalledTimes(1)
   })
 
   it('should call onDismiss and navigate to home when Yes button is clicked', () => {
-    renderWithRouter(<CloseConfirmationDialog {...defaultProps} />)
+    renderDialog()
+    const { confirmButton } = getElements()
 
-    const yesButton = screen.getByTestId(TEST_CONSTANTS.CONFIRM_BUTTON_TEST_ID)
-    fireEvent.click(yesButton)
+    fireEvent.click(confirmButton)
 
     expect(mockOnDismiss).toHaveBeenCalledTimes(1)
     expect(mockNavigate).toHaveBeenCalledWith('/')
   })
 
   it('should not close popup when clicking on backdrop', () => {
-    renderWithRouter(<CloseConfirmationDialog {...defaultProps} />)
+    renderDialog()
+    const { dialog } = getElements()
+
+    const backdrop = document.querySelector('.MuiBackdrop-root')
+    if (backdrop) {
+      fireEvent.click(backdrop)
+    }
 
     expect(mockOnDismiss).not.toHaveBeenCalled()
-    expect(screen.getByRole('dialog')).toBeInTheDocument()
+    expect(dialog).toBeInTheDocument()
   })
 
   it('should call onDismiss when Escape key is pressed', () => {
-    renderWithRouter(<CloseConfirmationDialog {...defaultProps} />)
+    renderDialog()
+    const { dialog } = getElements()
 
-    const dialog = screen.getByRole('dialog')
     fireEvent.keyDown(dialog, { key: 'Escape', code: 'Escape' })
 
     expect(mockOnDismiss).toHaveBeenCalledTimes(1)
   })
 
   it('should have proper accessibility attributes', () => {
-    renderWithRouter(<CloseConfirmationDialog {...defaultProps} />)
-
-    const closeButton = screen.getByTestId(TEST_CONSTANTS.CLOSE_BUTTON_TEST_ID)
-    const confirmButton = screen.getByTestId(
-      TEST_CONSTANTS.CONFIRM_BUTTON_TEST_ID
-    )
-    const cancelButton = screen.getByTestId(
-      TEST_CONSTANTS.CANCEL_BUTTON_TEST_ID
-    )
+    renderDialog()
+    const { closeButton, confirmButton, cancelButton } = getElements()
 
     expect(closeButton).toHaveAttribute(
       'aria-label',
@@ -134,57 +146,46 @@ describe('CloseConfirmationDialog', () => {
   })
 
   it('should have proper Dialog configuration', () => {
-    renderWithRouter(<CloseConfirmationDialog {...defaultProps} />)
+    renderDialog()
+    const { dialog } = getElements()
 
-    const dialog = screen.getByRole('dialog')
     expect(dialog).toBeInTheDocument()
     expect(dialog).toHaveClass('MuiDialog-paper')
     expect(dialog.closest('[role="dialog"]')).toBeInTheDocument()
   })
 
   it('should display correct text content', () => {
-    renderWithRouter(<CloseConfirmationDialog {...defaultProps} />)
+    renderDialog()
 
-    const title = screen.getByText(TEST_CONSTANTS.TITLE)
-    const message = screen.getByText(TEST_CONSTANTS.MESSAGE)
-    const yesButton = screen.getByText(TEST_CONSTANTS.YES_BUTTON)
-    const noButton = screen.getByText(TEST_CONSTANTS.NO_BUTTON)
-
-    expect(title).toBeInTheDocument()
-    expect(message).toBeInTheDocument()
-    expect(yesButton).toBeInTheDocument()
-    expect(noButton).toBeInTheDocument()
+    expect(screen.getByText(TEST_CONSTANTS.TITLE)).toBeInTheDocument()
+    expect(screen.getByText(TEST_CONSTANTS.MESSAGE)).toBeInTheDocument()
+    expect(screen.getByText(TEST_CONSTANTS.YES_BUTTON)).toBeInTheDocument()
+    expect(screen.getByText(TEST_CONSTANTS.NO_BUTTON)).toBeInTheDocument()
   })
 
   it('should have proper button styling classes', () => {
-    renderWithRouter(<CloseConfirmationDialog {...defaultProps} />)
-
-    const confirmButton = screen.getByTestId(
-      TEST_CONSTANTS.CONFIRM_BUTTON_TEST_ID
-    )
-    const cancelButton = screen.getByTestId(
-      TEST_CONSTANTS.CANCEL_BUTTON_TEST_ID
-    )
+    renderDialog()
+    const { confirmButton, cancelButton } = getElements()
 
     expect(confirmButton).toHaveClass('MuiButton-contained')
     expect(cancelButton).toHaveClass('MuiButton-outlined')
   })
 
-  it('should handle multiple rapid clicks correctly', () => {
-    renderWithRouter(<CloseConfirmationDialog {...defaultProps} />)
+  it('should handle multiple rapid clicks on Yes button correctly', () => {
+    renderDialog()
+    const { confirmButton } = getElements()
 
-    const yesButton = screen.getByTestId(TEST_CONSTANTS.CONFIRM_BUTTON_TEST_ID)
-    const noButton = screen.getByTestId(TEST_CONSTANTS.CANCEL_BUTTON_TEST_ID)
-
-    fireEvent.click(yesButton)
-    fireEvent.click(noButton)
-    fireEvent.click(yesButton)
+    fireEvent.click(confirmButton)
+    fireEvent.click(confirmButton)
+    fireEvent.click(confirmButton)
 
     expect(mockOnDismiss).toHaveBeenCalledTimes(3)
+    expect(mockNavigate).toHaveBeenCalledTimes(3)
+    expect(mockNavigate).toHaveBeenCalledWith('/')
   })
 
   it('should render with proper test IDs', () => {
-    renderWithRouter(<CloseConfirmationDialog {...defaultProps} />)
+    renderDialog()
 
     expect(
       screen.getByTestId(TEST_CONSTANTS.DIALOG_TEST_ID)
