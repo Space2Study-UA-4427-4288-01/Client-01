@@ -36,6 +36,19 @@ const SPACING = {
   BUTTON_GAP: '16px'
 } as const
 
+const baseButtonStyles = {
+  height: { xs: '36px', sm: '40px', md: '40px' },
+  padding: { xs: '4px 16px', sm: '5px 20px', md: '5px 20px' },
+  borderRadius: '4px',
+  minWidth: { xs: '80px', sm: '60px', md: '60px' },
+  fontSize: { xs: '13px', sm: '14px', md: '14px' },
+  fontWeight: 500,
+  fontFamily: 'Rubik, sans-serif',
+  lineHeight: { xs: '18px', sm: '20px', md: '20px' },
+  letterSpacing: '0.5px',
+  textTransform: 'none'
+} as const
+
 export const styles = {
   dialogPaper: {
     borderRadius: SIZES.BORDER_RADIUS,
@@ -115,18 +128,9 @@ export const styles = {
     flexDirection: { xs: 'column', sm: 'row' }
   },
   confirmButton: {
+    ...baseButtonStyles,
     backgroundColor: COLORS.BUTTON_BG,
     color: COLORS.WHITE,
-    height: { xs: '36px', sm: '40px', md: '40px' },
-    padding: { xs: '4px 16px', sm: '5px 20px', md: '5px 20px' },
-    borderRadius: '4px',
-    minWidth: { xs: '80px', sm: '60px', md: '60px' },
-    fontSize: { xs: '13px', sm: '14px', md: '14px' },
-    fontWeight: 500,
-    fontFamily: 'Rubik, sans-serif',
-    lineHeight: { xs: '18px', sm: '20px', md: '20px' },
-    letterSpacing: '0.5px',
-    textTransform: 'none',
     boxShadow: `0px 3px 16px ${COLORS.BUTTON_SHADOW}, 0px 9px 12px ${COLORS.BUTTON_SHADOW}`,
     '&:hover': {
       backgroundColor: COLORS.BUTTON_HOVER,
@@ -138,18 +142,9 @@ export const styles = {
     }
   },
   cancelButton: {
+    ...baseButtonStyles,
     backgroundColor: '#E0E0E0',
     color: '#263238',
-    height: { xs: '36px', sm: '40px', md: '40px' },
-    padding: { xs: '4px 16px', sm: '5px 20px', md: '5px 20px' },
-    borderRadius: '4px',
-    minWidth: { xs: '80px', sm: '60px', md: '60px' },
-    fontSize: { xs: '13px', sm: '14px', md: '14px' },
-    fontWeight: 500,
-    fontFamily: 'Rubik, sans-serif',
-    lineHeight: { xs: '18px', sm: '20px', md: '20px' },
-    letterSpacing: '0.5px',
-    textTransform: 'none',
     border: 'none',
     '&:hover': {
       backgroundColor: '#BDBDBD',
