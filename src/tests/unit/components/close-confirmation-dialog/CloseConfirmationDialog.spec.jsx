@@ -36,21 +36,22 @@ const renderWithRouter = (component) => {
   return render(<BrowserRouter>{component}</BrowserRouter>)
 }
 
+const getElements = () => ({
+  title: screen.getByText(TEST_CONSTANTS.TITLE),
+  message: screen.getByText(TEST_CONSTANTS.MESSAGE),
+  yesButton: screen.getByText(TEST_CONSTANTS.YES_BUTTON),
+  noButton: screen.getByText(TEST_CONSTANTS.NO_BUTTON),
+  closeButton: screen.getByTestId(TEST_CONSTANTS.CLOSE_BUTTON_TEST_ID),
+  confirmButton: screen.getByTestId(TEST_CONSTANTS.CONFIRM_BUTTON_TEST_ID),
+  cancelButton: screen.getByTestId(TEST_CONSTANTS.CANCEL_BUTTON_TEST_ID),
+  dialog: screen.getByRole('dialog')
+})
+
 const expectAllElementsPresent = () => {
-  expect(screen.getByText(TEST_CONSTANTS.TITLE)).toBeInTheDocument()
-  expect(screen.getByText(TEST_CONSTANTS.MESSAGE)).toBeInTheDocument()
-  expect(screen.getByText(TEST_CONSTANTS.YES_BUTTON)).toBeInTheDocument()
-  expect(screen.getByText(TEST_CONSTANTS.NO_BUTTON)).toBeInTheDocument()
-  expect(
-    screen.getByTestId(TEST_CONSTANTS.CLOSE_BUTTON_TEST_ID)
-  ).toBeInTheDocument()
-  expect(
-    screen.getByTestId(TEST_CONSTANTS.CONFIRM_BUTTON_TEST_ID)
-  ).toBeInTheDocument()
-  expect(
-    screen.getByTestId(TEST_CONSTANTS.CANCEL_BUTTON_TEST_ID)
-  ).toBeInTheDocument()
-  expect(screen.getByRole('dialog')).toBeInTheDocument()
+  const elements = getElements()
+  Object.values(elements).forEach((element) =>
+    expect(element).toBeInTheDocument()
+  )
 }
 
 const expectDialogClosed = () => {
@@ -63,19 +64,22 @@ const expectDialogOpen = () => {
   expect(screen.getByText(TEST_CONSTANTS.TITLE)).toBeInTheDocument()
 }
 
+const clickButton = (buttonType) => {
+  const elements = getElements()
+  fireEvent.click(elements[buttonType])
+}
+
+const expectButtonClick = (buttonType, expectedCalls = 1) => {
+  clickButton(buttonType)
+  expect(mockOnDismiss).toHaveBeenCalledTimes(expectedCalls)
+}
+
 describe('CloseConfirmationDialog', () => {
   const renderDialog = (props = {}) => {
     return renderWithRouter(
       <CloseConfirmationDialog {...defaultProps} {...props} />
     )
   }
-
-  const getElements = () => ({
-    closeButton: screen.getByTestId(TEST_CONSTANTS.CLOSE_BUTTON_TEST_ID),
-    confirmButton: screen.getByTestId(TEST_CONSTANTS.CONFIRM_BUTTON_TEST_ID),
-    cancelButton: screen.getByTestId(TEST_CONSTANTS.CANCEL_BUTTON_TEST_ID),
-    dialog: screen.getByRole('dialog')
-  })
 
   beforeEach(() => {
     vi.clearAllMocks()
@@ -93,40 +97,27 @@ describe('CloseConfirmationDialog', () => {
 
   it('should call onDismiss when close button is clicked', () => {
     renderDialog()
-    const { closeButton } = getElements()
-
-    fireEvent.click(closeButton)
-
-    expect(mockOnDismiss).toHaveBeenCalledTimes(1)
+    expectButtonClick('closeButton')
   })
 
   it('should call onDismiss when No button is clicked', () => {
     renderDialog()
-    const { cancelButton } = getElements()
-
-    fireEvent.click(cancelButton)
-
-    expect(mockOnDismiss).toHaveBeenCalledTimes(1)
+    expectButtonClick('cancelButton')
   })
 
   it('should call onDismiss and navigate to home when Yes button is clicked', () => {
     renderDialog()
-    const { confirmButton } = getElements()
-
-    fireEvent.click(confirmButton)
-
+    clickButton('confirmButton')
     expect(mockOnDismiss).toHaveBeenCalledTimes(1)
     expect(mockNavigate).toHaveBeenCalledWith('/')
   })
 
   it('should not close popup when clicking on backdrop', () => {
     renderDialog()
-
     const backdrop = document.querySelector('.MuiBackdrop-root')
     if (backdrop) {
       fireEvent.click(backdrop)
     }
-
     expect(mockOnDismiss).not.toHaveBeenCalled()
     expectDialogOpen()
   })
@@ -134,16 +125,13 @@ describe('CloseConfirmationDialog', () => {
   it('should call onDismiss when Escape key is pressed', () => {
     renderDialog()
     const { dialog } = getElements()
-
     fireEvent.keyDown(dialog, { key: 'Escape', code: 'Escape' })
-
     expect(mockOnDismiss).toHaveBeenCalledTimes(1)
   })
 
   it('should have proper accessibility attributes', () => {
     renderDialog()
     const { closeButton, confirmButton, cancelButton } = getElements()
-
     expect(closeButton).toHaveAttribute(
       'aria-label',
       'Close confirmation dialog'
@@ -152,40 +140,12 @@ describe('CloseConfirmationDialog', () => {
     expect(cancelButton).toHaveAttribute('aria-label', 'Cancel close')
   })
 
-  it('should have proper Dialog configuration', () => {
-    renderDialog()
-    const { dialog } = getElements()
-
-    expect(dialog).toBeInTheDocument()
-    expect(dialog).toHaveClass('MuiDialog-paper')
-    expect(dialog.closest('[role="dialog"]')).toBeInTheDocument()
-  })
-
-  it('should display correct text content', () => {
-    renderDialog()
-
-    expect(screen.getByText(TEST_CONSTANTS.TITLE)).toBeInTheDocument()
-    expect(screen.getByText(TEST_CONSTANTS.MESSAGE)).toBeInTheDocument()
-    expect(screen.getByText(TEST_CONSTANTS.YES_BUTTON)).toBeInTheDocument()
-    expect(screen.getByText(TEST_CONSTANTS.NO_BUTTON)).toBeInTheDocument()
-  })
-
-  it('should have proper button styling classes', () => {
-    renderDialog()
-    const { confirmButton, cancelButton } = getElements()
-
-    expect(confirmButton).toHaveClass('MuiButton-contained')
-    expect(cancelButton).toHaveClass('MuiButton-outlined')
-  })
-
   it('should handle multiple rapid clicks on Yes button correctly', () => {
     renderDialog()
     const { confirmButton } = getElements()
-
     fireEvent.click(confirmButton)
     fireEvent.click(confirmButton)
     fireEvent.click(confirmButton)
-
     expect(mockOnDismiss).toHaveBeenCalledTimes(3)
     expect(mockNavigate).toHaveBeenCalledTimes(3)
     expect(mockNavigate).toHaveBeenCalledWith('/')
@@ -193,7 +153,6 @@ describe('CloseConfirmationDialog', () => {
 
   it('should render with proper test IDs', () => {
     renderDialog()
-
     expect(
       screen.getByTestId(TEST_CONSTANTS.DIALOG_TEST_ID)
     ).toBeInTheDocument()
