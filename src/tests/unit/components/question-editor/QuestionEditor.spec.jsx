@@ -33,51 +33,38 @@ describe('QuestionEditor', () => {
     onEdit = vi.fn()
   })
 
-  it('renders question input field', () => {
-    render(
+  const setup = (props = {}) => {
+    return render(
       <QuestionEditor
         data={mockData}
         handleInputChange={handleInputChange}
         handleNonInputValueChange={handleNonInputValueChange}
+        {...props}
       />
     )
+  }
+
+  it('renders question input field', () => {
+    setup()
     expect(screen.getByLabelText('questionPage.question')).toBeInTheDocument()
   })
 
   it('renders open answer input when type is openAnswer', () => {
-    const data = { ...mockData, type: 'openAnswer', openAnswer: 'Open answer' }
-    render(
-      <QuestionEditor
-        data={data}
-        handleInputChange={handleInputChange}
-        handleNonInputValueChange={handleNonInputValueChange}
-      />
-    )
+    setup({
+      data: { ...mockData, type: 'openAnswer', openAnswer: 'Open answer' }
+    })
     expect(screen.getByLabelText('questionPage.answer')).toBeInTheDocument()
   })
 
   it('changes question type', () => {
-    render(
-      <QuestionEditor
-        data={mockData}
-        handleInputChange={handleInputChange}
-        handleNonInputValueChange={handleNonInputValueChange}
-      />
-    )
+    setup()
     const selectInput = screen.getByTestId('app-select')
     fireEvent.change(selectInput, { target: { value: 'openAnswer' } })
     expect(handleNonInputValueChange).toHaveBeenCalled()
   })
 
   it('changes question and answer input fields', () => {
-    render(
-      <QuestionEditor
-        data={mockData}
-        handleInputChange={handleInputChange}
-        handleNonInputValueChange={handleNonInputValueChange}
-      />
-    )
-
+    setup()
     const questionInput = screen.getByLabelText('questionPage.question')
     fireEvent.change(questionInput, { target: { value: 'New question' } })
     expect(handleInputChange).toHaveBeenCalledWith('text')
@@ -90,16 +77,7 @@ describe('QuestionEditor', () => {
   })
 
   it('clicks on edit title and category', () => {
-    render(
-      <QuestionEditor
-        data={mockData}
-        handleInputChange={handleInputChange}
-        handleNonInputValueChange={handleNonInputValueChange}
-        isQuizQuestion
-        onEdit={onEdit}
-      />
-    )
-
+    setup({ isQuizQuestion: true, onEdit })
     const menuButton = screen.getByTestId('MoreVertIcon').closest('button')
     fireEvent.click(menuButton)
 
