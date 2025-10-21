@@ -8,29 +8,19 @@ import {
   Box
 } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close'
+import { useTranslation } from 'react-i18next'
 import InfoIcon from '~/assets/img/guest-home-page/info.svg'
 import { styles } from '~/components/info-popup/InfoPopup.styles'
 
-const TEXTS = {
-  TITLE: 'Your email address needs to be verified',
-  MESSAGE_START: 'We sent a confirmation email to:',
-  MESSAGE_END:
-    'Check your email and click on the confirmation button to continue.',
-  MESSAGE_WITHOUT_EMAIL:
-    'Please check your email and click on the confirmation button to continue.',
-  OK_BUTTON: 'OK',
-  CLOSE_BUTTON_LABEL: 'Close info popup',
-  OK_BUTTON_LABEL: 'Close popup and continue',
-  INFO_ICON_ALT: 'info'
-} as const
-
 interface InfoPopupProps {
-  email?: string
+  email: string
   onClose: () => void
   open: boolean
 }
 
 const InfoPopup: FC<InfoPopupProps> = ({ email, onClose, open }) => {
+  const { t } = useTranslation()
+
   const handleBackdropClick = useCallback(
     (
       _event:
@@ -61,7 +51,7 @@ const InfoPopup: FC<InfoPopupProps> = ({ email, onClose, open }) => {
     >
       <DialogContent sx={styles.dialogContent}>
         <IconButton
-          aria-label={TEXTS.CLOSE_BUTTON_LABEL}
+          aria-label='Close info popup'
           data-testid='close-button'
           onClick={onClose}
           sx={styles.closeButton}
@@ -69,37 +59,30 @@ const InfoPopup: FC<InfoPopupProps> = ({ email, onClose, open }) => {
           <CloseIcon />
         </IconButton>
 
-        <Box sx={styles.iconContainer}>
-          <img
-            alt={TEXTS.INFO_ICON_ALT}
-            src={InfoIcon}
-            style={styles.infoIcon}
-          />
-        </Box>
+        <Box
+          alt='info'
+          component='img'
+          src={InfoIcon}
+          sx={{ ...styles.iconContainer, ...styles.infoIcon }}
+        />
 
         <Typography sx={styles.title} variant='h6'>
-          {TEXTS.TITLE}
+          {t('signup.confirmEmailTitle')}
         </Typography>
 
         <Typography sx={styles.message}>
-          {email ? (
-            <>
-              {TEXTS.MESSAGE_START} <strong>{email}</strong>.{' '}
-              {TEXTS.MESSAGE_END}
-            </>
-          ) : (
-            TEXTS.MESSAGE_WITHOUT_EMAIL
-          )}
+          {t('signup.confirmEmailMessage')}
+          <strong>{email}</strong>.{t('signup.confirmEmailDesc')}
         </Typography>
 
         <Button
-          aria-label={TEXTS.OK_BUTTON_LABEL}
+          aria-label='Close popup and continue'
           data-testid='ok-button'
           onClick={onClose}
           sx={styles.okButton}
           variant='contained'
         >
-          {TEXTS.OK_BUTTON}
+          {t('common.confirmButton')}
         </Button>
       </DialogContent>
     </Dialog>
