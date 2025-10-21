@@ -42,48 +42,44 @@ export const styles = {
     }
   },
   iconContainer: {
-    marginTop: '78px',
-    marginBottom: '24px',
-    marginRight: '7px',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center'
+    marginTop: { xs: '40px', sm: '60px', md: '78px' },
+    marginBottom: { xs: '16px', sm: '20px', md: '24px' },
+    marginRight: '7px'
   },
   successIcon: {
-    width: '75px',
-    height: '75px',
+    width: { xs: '60px', sm: '70px', md: '75px' },
+    height: { xs: '60px', sm: '70px', md: '75px' },
     display: 'block'
   },
   title: {
     marginTop: '10px',
-    marginBottom: '30px',
+    marginBottom: { xs: '20px', sm: '25px', md: '30px' },
     marginLeft: '6px',
     color: '#29313D',
     fontWeight: 500,
-    fontSize: '24px',
+    fontSize: { xs: '18px', sm: '20px', md: '24px' },
     lineHeight: '120%',
     fontFamily: 'Rubik, sans-serif',
     letterSpacing: '0px',
     textAlign: 'center',
-    maxWidth: '600px',
+    maxWidth: { xs: '280px', sm: '400px', md: '600px' },
     wordWrap: 'break-word',
     hyphens: 'auto'
   },
   goToLoginButton: {
     backgroundColor: '#263238',
     color: '#FFFFFF',
-    height: '56px',
-    padding: '16px 32px',
+    height: { xs: '48px', sm: '52px', md: '56px' },
+    padding: { xs: '12px 24px', sm: '14px 28px', md: '16px 32px' },
     borderRadius: '4px',
-    minWidth: '152px',
-    fontSize: '16px',
+    minWidth: { xs: '120px', sm: '140px', md: '152px' },
+    fontSize: { xs: '14px', sm: '15px', md: '16px' },
     fontWeight: 500,
     fontFamily: 'Rubik, sans-serif',
     lineHeight: '24px',
     letterSpacing: '0.5px',
     textTransform: 'none',
-
-    marginBottom: '50px',
+    marginBottom: { xs: '30px', sm: '40px', md: '50px' },
     boxShadow:
       '0px 3px 16px rgba(144, 164, 174, 0.12), 0px 9px 12px rgba(144, 164, 174, 0.14)',
     '&:hover': {
