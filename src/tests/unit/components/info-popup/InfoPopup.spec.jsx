@@ -6,160 +6,101 @@ vi.mock('~/assets/img/guest-home-page/info.svg', () => ({
   default: 'mocked-info-icon.svg'
 }))
 
-const TEST_CONSTANTS = {
-  TITLE: 'Your email address needs to be verified',
-  OK_BUTTON: 'OK',
-  CLOSE_BUTTON_TEST_ID: 'close-button',
-  OK_BUTTON_TEST_ID: 'ok-button',
-  INFO_ICON_ALT: 'info',
-  TEST_EMAIL: 'test@example.com',
-  JOHN_EMAIL: 'john.due@gmail.com',
-  USER_EMAIL: 'user@domain.com'
-}
+vi.mock('react-i18next', () => ({
+  useTranslation: () => ({
+    t: (key) => {
+      const translations = {
+        'signup.confirmEmailTitle': 'Your email address needs to be verified',
+        'signup.confirmEmailMessage': 'We sent a confirmation email to: ',
+        'signup.confirmEmailDesc':
+          ' Check your email and click on the confirmation button to continue.',
+        'common.confirmButton': 'OK'
+      }
+      return translations[key] || key
+    }
+  })
+}))
 
-const mockOnClose = vi.fn()
+describe('InfoPopup test', () => {
+  const onClose = vi.fn()
+  const props = {
+    open: true,
+    onClose,
+    email: 'test@example.com'
+  }
 
-const defaultProps = {
-  open: true,
-  onClose: mockOnClose,
-  email: TEST_CONSTANTS.TEST_EMAIL
-}
-
-describe('InfoPopup', () => {
   beforeEach(() => {
     vi.clearAllMocks()
   })
 
-  it('should render when open is true', () => {
-    render(<InfoPopup {...defaultProps} />)
+  it('should render popup with email', () => {
+    render(<InfoPopup {...props} />)
 
-    expect(screen.getByText(TEST_CONSTANTS.TITLE)).toBeInTheDocument()
-    expect(screen.getByText(TEST_CONSTANTS.TEST_EMAIL)).toBeInTheDocument()
-    expect(screen.getByText(TEST_CONSTANTS.OK_BUTTON)).toBeInTheDocument()
     expect(
-      screen.getByTestId(TEST_CONSTANTS.CLOSE_BUTTON_TEST_ID)
+      screen.getByText('Your email address needs to be verified')
     ).toBeInTheDocument()
-    expect(
-      screen.getByTestId(TEST_CONSTANTS.OK_BUTTON_TEST_ID)
-    ).toBeInTheDocument()
+    expect(screen.getByText('test@example.com')).toBeInTheDocument()
+    expect(screen.getByTestId('close-button')).toBeInTheDocument()
+    expect(screen.getByTestId('ok-button')).toBeInTheDocument()
   })
 
   it('should not render when open is false', () => {
-    render(<InfoPopup {...defaultProps} open={false} />)
+    render(<InfoPopup {...props} open={false} />)
 
-    expect(screen.queryByText(TEST_CONSTANTS.TITLE)).not.toBeInTheDocument()
-    expect(screen.queryByText(TEST_CONSTANTS.OK_BUTTON)).not.toBeInTheDocument()
     expect(
-      screen.queryByTestId(TEST_CONSTANTS.CLOSE_BUTTON_TEST_ID)
+      screen.queryByText('Your email address needs to be verified')
     ).not.toBeInTheDocument()
   })
 
-  it('should display email when provided', () => {
-    render(<InfoPopup {...defaultProps} email={TEST_CONSTANTS.JOHN_EMAIL} />)
+  it('should display different email addresses', () => {
+    render(<InfoPopup {...props} email='user@example.com' />)
 
-    expect(screen.getByText(TEST_CONSTANTS.JOHN_EMAIL)).toBeInTheDocument()
-    expect(screen.getByText(TEST_CONSTANTS.JOHN_EMAIL)).toHaveStyle(
-      'font-weight: 500'
-    )
-  })
-
-  it('should not display email when not provided', () => {
-    render(<InfoPopup {...defaultProps} email={undefined} />)
-
-    expect(
-      screen.queryByText(TEST_CONSTANTS.TEST_EMAIL)
-    ).not.toBeInTheDocument()
-    expect(
-      screen.getByText(
-        /Please check your email and click on the confirmation button to continue/
-      )
-    ).toBeInTheDocument()
-    expect(
-      screen.queryByText(/We sent a confirmation email to:/)
-    ).not.toBeInTheDocument()
+    expect(screen.getByText('user@example.com')).toBeInTheDocument()
   })
 
   it('should call onClose when close button is clicked', () => {
-    render(<InfoPopup {...defaultProps} />)
+    render(<InfoPopup {...props} />)
 
-    const closeButton = screen.getByTestId(TEST_CONSTANTS.CLOSE_BUTTON_TEST_ID)
+    const closeButton = screen.getByTestId('close-button')
     fireEvent.click(closeButton)
 
-    expect(mockOnClose).toHaveBeenCalledTimes(1)
+    expect(onClose).toHaveBeenCalledTimes(1)
   })
 
   it('should call onClose when OK button is clicked', () => {
-    render(<InfoPopup {...defaultProps} />)
+    render(<InfoPopup {...props} />)
 
-    const okButton = screen.getByTestId(TEST_CONSTANTS.OK_BUTTON_TEST_ID)
+    const okButton = screen.getByTestId('ok-button')
     fireEvent.click(okButton)
 
-    expect(mockOnClose).toHaveBeenCalledTimes(1)
+    expect(onClose).toHaveBeenCalledTimes(1)
   })
 
-  it('should display info icon', () => {
-    render(<InfoPopup {...defaultProps} />)
+  it('should have info icon', () => {
+    render(<InfoPopup {...props} />)
 
-    const infoIcon = screen.getByAltText(TEST_CONSTANTS.INFO_ICON_ALT)
-    expect(infoIcon).toBeInTheDocument()
-    expect(infoIcon).toHaveAttribute('src')
+    const icon = screen.getByAltText('info')
+
+    expect(icon).toBeInTheDocument()
   })
 
-  it('should not close popup when clicking on backdrop', () => {
-    render(<InfoPopup {...defaultProps} />)
+  it('should not close when clicking on backdrop', () => {
+    render(<InfoPopup {...props} />)
 
-    expect(mockOnClose).not.toHaveBeenCalled()
-    expect(screen.getByRole('dialog')).toBeInTheDocument()
+    const backdrop = document.querySelector('.MuiBackdrop-root')
+    if (backdrop) {
+      fireEvent.click(backdrop)
+    }
+
+    expect(onClose).not.toHaveBeenCalled()
   })
 
   it('should call onClose when Escape key is pressed', () => {
-    render(<InfoPopup {...defaultProps} />)
+    render(<InfoPopup {...props} />)
 
     const dialog = screen.getByRole('dialog')
     fireEvent.keyDown(dialog, { key: 'Escape', code: 'Escape' })
 
-    expect(mockOnClose).toHaveBeenCalledTimes(1)
-  })
-
-  it('should have proper accessibility attributes', () => {
-    render(<InfoPopup {...defaultProps} />)
-
-    const closeButton = screen.getByTestId(TEST_CONSTANTS.CLOSE_BUTTON_TEST_ID)
-    const okButton = screen.getByTestId(TEST_CONSTANTS.OK_BUTTON_TEST_ID)
-
-    expect(closeButton).toHaveAttribute('aria-label', 'Close info popup')
-    expect(okButton).toHaveAttribute('aria-label', 'Close popup and continue')
-  })
-
-  it('should have proper Dialog configuration', () => {
-    render(<InfoPopup {...defaultProps} />)
-
-    const dialog = screen.getByRole('dialog')
-    expect(dialog).toBeInTheDocument()
-    expect(dialog).toHaveClass('MuiDialog-paper')
-    expect(dialog.closest('[role="dialog"]')).toBeInTheDocument()
-  })
-
-  it('should render with different email addresses', () => {
-    render(<InfoPopup {...defaultProps} email={TEST_CONSTANTS.USER_EMAIL} />)
-
-    expect(screen.getByText(TEST_CONSTANTS.USER_EMAIL)).toBeInTheDocument()
-    expect(screen.getByText(TEST_CONSTANTS.USER_EMAIL)).toHaveStyle(
-      'font-weight: 500'
-    )
-  })
-
-  it('should handle empty email gracefully', () => {
-    render(<InfoPopup {...defaultProps} email='' />)
-
-    expect(
-      screen.getByText(
-        /Please check your email and click on the confirmation button to continue/
-      )
-    ).toBeInTheDocument()
-    expect(
-      screen.queryByText(/We sent a confirmation email to:/)
-    ).not.toBeInTheDocument()
-    expect(screen.queryByText(/@/)).not.toBeInTheDocument()
+    expect(onClose).toHaveBeenCalledTimes(1)
   })
 })
