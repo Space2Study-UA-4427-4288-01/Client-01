@@ -1,56 +1,21 @@
-const COLORS = {
-  WHITE: '#FFFFFF',
-  BLACK: '#000000',
-  TITLE: '#29313D',
-  MESSAGE: '#666666',
-  BUTTON_BG: '#263238',
-  BUTTON_HOVER: '#1a2529',
-  BUTTON_ACTIVE: '#0f1416',
-  BACKDROP: 'rgba(38, 50, 56, 0.75)',
-  HOVER_OVERLAY: 'rgba(0, 0, 0, 0.04)',
-  SHADOW: 'rgba(0, 0, 0, 0.1)',
-  BUTTON_SHADOW: 'rgba(144, 164, 174, 0.12)',
-  BUTTON_SHADOW_HOVER: 'rgba(144, 164, 174, 0.16)'
-} as const
-
-const SIZES = {
-  BORDER_RADIUS: '8px',
-  ICON_SIZE: '96px',
-  BUTTON_HEIGHT: '56px',
-  CLOSE_BUTTON_SIZE: '48px',
-  TITLE_FONT_SIZE: '24px',
-  MESSAGE_FONT_SIZE: '16px',
-  MESSAGE_LINE_HEIGHT: '24px',
-  BUTTON_FONT_SIZE: '16px'
-} as const
-
-const SPACING = {
-  SMALL: '12px',
-  MEDIUM: '16px',
-  LARGE: '24px',
-  XLARGE: '32px',
-  ICON_MARGIN_TOP: '65px',
-  ICON_MARGIN_BOTTOM: '23px',
-  TITLE_MARGIN_BOTTOM: '18px',
-  MESSAGE_MARGIN_BOTTOM: '30px',
-  BUTTON_MARGIN_BOTTOM: '50px'
-} as const
+import { commonShadow } from '~/styles/app-theme/custom-shadows'
+import { TypographyVariantEnum } from '~/types'
 
 export const styles = {
   dialogPaper: {
-    borderRadius: SIZES.BORDER_RADIUS,
+    borderRadius: '8px',
     width: { xs: '90vw', sm: '600px', md: '744px' },
     minHeight: '448px',
     maxHeight: '90vh',
-    backgroundColor: COLORS.WHITE,
-    boxShadow: `0px 8px 32px ${COLORS.SHADOW}`
+    backgroundColor: 'basic.white',
+    boxShadow: commonShadow
   },
   backdrop: {
-    backgroundColor: COLORS.BACKDROP,
+    backgroundColor: 'rgba(38, 50, 56, 0.75)',
     backdropFilter: 'blur(4px)'
   },
   dialogContent: {
-    padding: `${SPACING.MEDIUM} ${SPACING.LARGE} 0 ${SPACING.LARGE}`,
+    p: { xs: '16px 24px 0', sm: '16px 24px 0', md: '16px 24px 0' },
     position: 'relative',
     display: 'flex',
     flexDirection: 'column',
@@ -63,86 +28,82 @@ export const styles = {
   closeButton: {
     position: 'absolute',
     top: '15px',
-    right: SPACING.MEDIUM,
-    width: SIZES.CLOSE_BUTTON_SIZE,
-    height: SIZES.CLOSE_BUTTON_SIZE,
-    minWidth: SIZES.CLOSE_BUTTON_SIZE,
+    right: '16px',
+    width: '48px',
+    height: '48px',
+    minWidth: '48px',
     borderRadius: '100px',
-    color: COLORS.BLACK,
+    color: 'basic.black',
     backgroundColor: 'transparent',
-    padding: SPACING.SMALL,
+    p: '12px',
     '&:hover': {
-      backgroundColor: COLORS.HOVER_OVERLAY
+      backgroundColor: 'rgba(0, 0, 0, 0.04)'
     },
     '& .MuiSvgIcon-root': {
-      fontSize: SIZES.TITLE_FONT_SIZE
+      fontSize: { xs: '18px', sm: '20px', md: '24px' }
     }
   },
   iconContainer: {
-    marginTop: SPACING.ICON_MARGIN_TOP,
-    marginBottom: SPACING.ICON_MARGIN_BOTTOM,
-    marginLeft: '-10px',
+    mt: { xs: '40px', sm: '50px', md: '65px' },
+    mb: { xs: '14px', sm: '17px', md: '20px' },
+    mr: '10px',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center'
   },
   infoIcon: {
-    width: SIZES.ICON_SIZE,
-    height: SIZES.ICON_SIZE,
+    width: { xs: '72px', sm: '84px', md: '96px' },
+    height: { xs: '72px', sm: '84px', md: '96px' },
     display: 'block'
   },
   title: {
-    marginBottom: SPACING.TITLE_MARGIN_BOTTOM,
-    color: COLORS.TITLE,
+    mb: { xs: '8px', sm: '11px', md: '14px' },
+    color: 'primary.900',
     fontWeight: 500,
-    fontSize: SIZES.TITLE_FONT_SIZE,
-    lineHeight: '120%',
-    fontFamily: 'Rubik, sans-serif',
+    typography: {
+      xs: TypographyVariantEnum.MidTitle,
+      md: TypographyVariantEnum.H5
+    },
     letterSpacing: '0px',
     textAlign: 'center',
-    maxWidth: '500px',
+    maxWidth: { xs: '280px', sm: '400px', md: '500px' },
     whiteSpace: 'normal',
     overflow: 'visible',
     textOverflow: 'unset',
-    marginLeft: '-15px'
+    mr: '15px'
   },
   message: {
-    marginBottom: SPACING.MESSAGE_MARGIN_BOTTOM,
-    color: COLORS.MESSAGE,
-    fontSize: SIZES.MESSAGE_FONT_SIZE,
-    lineHeight: SIZES.MESSAGE_LINE_HEIGHT,
-    letterSpacing: '0.5px',
-    fontFamily: 'Rubik, sans-serif',
-    fontWeight: 400,
+    mb: { xs: '20px', sm: '25px', md: '30px' },
+    color: 'primary.600',
+    typography: TypographyVariantEnum.Body1,
     textAlign: 'center',
-    maxWidth: '565px',
+    maxWidth: { xs: '300px', sm: '450px', md: '565px' },
     '& strong': {
-      fontWeight: 500,
-      letterSpacing: '0.5px'
+      fontWeight: 500
     }
   },
   okButton: {
-    backgroundColor: COLORS.BUTTON_BG,
-    color: COLORS.WHITE,
-    height: SIZES.BUTTON_HEIGHT,
-    padding: `${SPACING.MEDIUM} ${SPACING.XLARGE}`,
+    backgroundColor: 'primary.900',
+    color: 'basic.white',
+    height: { xs: '48px', sm: '52px', md: '56px' },
+    p: {
+      xs: '12px 20px',
+      sm: '14px 24px',
+      md: '16px 32px'
+    },
     borderRadius: '4px',
-    minWidth: '86px',
-    fontSize: SIZES.BUTTON_FONT_SIZE,
-    fontWeight: 500,
-    fontFamily: 'Rubik, sans-serif',
-    lineHeight: SIZES.BUTTON_FONT_SIZE,
-    letterSpacing: '0.5px',
+    minWidth: { xs: '70px', sm: '80px', md: '86px' },
+    typography: TypographyVariantEnum.Body1,
     textTransform: 'none',
-    marginBottom: SPACING.BUTTON_MARGIN_BOTTOM,
-    boxShadow: `0px 3px 16px ${COLORS.BUTTON_SHADOW}, 0px 9px 12px ${COLORS.BUTTON_SHADOW}`,
+    mb: { xs: '40px', sm: '50px', md: '60px' },
+    boxShadow: commonShadow,
     '&:hover': {
-      backgroundColor: COLORS.BUTTON_HOVER,
-      boxShadow: `0px 3px 16px ${COLORS.BUTTON_SHADOW_HOVER}, 0px 9px 12px ${COLORS.BUTTON_SHADOW_HOVER}`
+      backgroundColor: 'primary.800',
+      boxShadow: commonShadow
     },
     '&:active': {
-      backgroundColor: COLORS.BUTTON_ACTIVE,
+      backgroundColor: 'primary.700',
       transform: 'translateY(1px)'
     }
   }
-} as const
+}
