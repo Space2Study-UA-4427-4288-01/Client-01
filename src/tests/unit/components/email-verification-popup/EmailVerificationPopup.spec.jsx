@@ -5,11 +5,31 @@ import EmailVerificationPopup from '~/components/email-verification-popup/EmailV
 const mockOnClose = vi.fn()
 const mockOnGoToLogin = vi.fn()
 
-const defaultProps = {
+const props = {
   open: true,
   onClose: mockOnClose,
   onGoToLogin: mockOnGoToLogin
 }
+
+const translations = {
+  SUCCESS_MESSAGE: 'Your email has been successfully verified!',
+  GO_TO_LOGIN: 'Go to login'
+}
+
+vi.mock('react-i18next', () => ({
+  useTranslation: () => ({
+    t: (key) => {
+      const translationMap = {
+        'modals.emailConfirm': translations.SUCCESS_MESSAGE,
+        'button.goToLogin': translations.GO_TO_LOGIN
+      }
+      return translationMap[key] || key
+    }
+  })
+}))
+
+const renderEmailVerificationPopup = (customProps = {}) =>
+  render(<EmailVerificationPopup {...props} {...customProps} />)
 
 describe('EmailVerificationPopup', () => {
   beforeEach(() => {
@@ -17,26 +37,25 @@ describe('EmailVerificationPopup', () => {
   })
 
   it('should render when open is true', () => {
-    render(<EmailVerificationPopup {...defaultProps} />)
+    renderEmailVerificationPopup()
 
-    expect(
-      screen.getByText('Email has been successfully verified!')
-    ).toBeInTheDocument()
-    expect(screen.getByText('Go to login')).toBeInTheDocument()
+    expect(screen.getByText(translations.SUCCESS_MESSAGE)).toBeInTheDocument()
+    expect(screen.getByText(translations.GO_TO_LOGIN)).toBeInTheDocument()
     expect(screen.getByTestId('close-button')).toBeInTheDocument()
     expect(screen.getByTestId('go-to-login-button')).toBeInTheDocument()
   })
 
   it('should not render when open is false', () => {
-    render(<EmailVerificationPopup {...defaultProps} open={false} />)
+    renderEmailVerificationPopup({ open: false })
 
     expect(
-      screen.queryByText('Email has been successfully verified!')
+      screen.queryByText(translations.SUCCESS_MESSAGE)
     ).not.toBeInTheDocument()
+    expect(screen.queryByText(translations.GO_TO_LOGIN)).not.toBeInTheDocument()
   })
 
   it('should call onClose when close button is clicked', () => {
-    render(<EmailVerificationPopup {...defaultProps} />)
+    renderEmailVerificationPopup()
 
     const closeButton = screen.getByTestId('close-button')
     fireEvent.click(closeButton)
@@ -45,7 +64,7 @@ describe('EmailVerificationPopup', () => {
   })
 
   it('should call onGoToLogin when go to login button is clicked', () => {
-    render(<EmailVerificationPopup {...defaultProps} />)
+    renderEmailVerificationPopup()
 
     const goToLoginButton = screen.getByTestId('go-to-login-button')
     fireEvent.click(goToLoginButton)
@@ -54,7 +73,7 @@ describe('EmailVerificationPopup', () => {
   })
 
   it('should display success icon', () => {
-    render(<EmailVerificationPopup {...defaultProps} />)
+    renderEmailVerificationPopup()
 
     const successIcon = screen.getByAltText('Email verification success icon')
     expect(successIcon).toBeInTheDocument()
@@ -62,7 +81,10 @@ describe('EmailVerificationPopup', () => {
   })
 
   it('should not close popup when clicking on backdrop', () => {
-    render(<EmailVerificationPopup {...defaultProps} />)
+    renderEmailVerificationPopup()
+
+    const dialog = screen.getByRole('dialog')
+    expect(dialog).toBeInTheDocument()
 
     const backdrop = document.querySelector('.MuiBackdrop-root')
     if (backdrop) {
@@ -72,12 +94,30 @@ describe('EmailVerificationPopup', () => {
     expect(mockOnClose).not.toHaveBeenCalled()
   })
 
-  it('should have proper Dialog configuration for escape key handling', () => {
-    render(<EmailVerificationPopup {...defaultProps} />)
+  it('should call onClose when Escape key is pressed', () => {
+    renderEmailVerificationPopup()
+
+    const dialog = screen.getByRole('dialog')
+    fireEvent.keyDown(dialog, { key: 'Escape', code: 'Escape' })
+
+    expect(mockOnClose).toHaveBeenCalledTimes(1)
+  })
+
+  it('should have proper accessibility attributes', () => {
+    renderEmailVerificationPopup()
+
+    const closeButton = screen.getByTestId('close-button')
+    expect(closeButton).toHaveAttribute(
+      'aria-label',
+      'Close email verification popup'
+    )
+  })
+
+  it('should have proper Dialog configuration', () => {
+    renderEmailVerificationPopup()
 
     const dialog = screen.getByRole('dialog')
     expect(dialog).toBeInTheDocument()
-
-    expect(dialog.closest('[role="dialog"]')).toBeInTheDocument()
+    expect(dialog).toHaveClass('MuiDialog-paper')
   })
 })
