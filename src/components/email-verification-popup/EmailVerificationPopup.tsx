@@ -8,6 +8,7 @@ import {
   Box
 } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close'
+import { useTranslation } from 'react-i18next'
 import SuccessIcon from '~/assets/img/email-confirmation-modals/success-icon.svg'
 import { styles } from './EmailVerificationPopup.styles'
 
@@ -22,6 +23,8 @@ const EmailVerificationPopup: FC<EmailVerificationPopupProps> = ({
   onClose,
   onGoToLogin
 }) => {
+  const { t } = useTranslation()
+
   const handleBackdropClick = (_event: unknown, reason: string) => {
     if (reason === 'backdropClick') {
       return
@@ -54,16 +57,15 @@ const EmailVerificationPopup: FC<EmailVerificationPopupProps> = ({
           <CloseIcon />
         </IconButton>
 
-        <Box sx={styles.iconContainer}>
-          <img
-            alt='Email verification success icon'
-            src={SuccessIcon}
-            style={styles.successIcon}
-          />
-        </Box>
+        <Box
+          alt='Email verification success icon'
+          component='img'
+          src={SuccessIcon}
+          sx={{ ...styles.iconContainer, ...styles.successIcon }}
+        />
 
         <Typography sx={styles.title} variant='h6'>
-          Email has been successfully verified!
+          {t('modals.emailConfirm')}
         </Typography>
 
         <Button
@@ -72,7 +74,7 @@ const EmailVerificationPopup: FC<EmailVerificationPopupProps> = ({
           sx={styles.goToLoginButton}
           variant='contained'
         >
-          Go to login
+          {t('button.goToLogin')}
         </Button>
       </DialogContent>
     </Dialog>
