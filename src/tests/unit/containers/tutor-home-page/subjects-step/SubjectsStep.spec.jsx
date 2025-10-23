@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event'
 import { vi, describe, it, expect, beforeEach } from 'vitest'
 
 import SubjectsStep from '~/containers/tutor-home-page/subjects-step/SubjectsStep'
-import { categoriesMock } from './constants.js'
+import { categoriesMock } from '~/containers/tutor-home-page/subjects-step/constants.js'
 import en from '~/constants/translations/en/become-tutor.json'
 
 vi.mock('@emotion/react', () => ({
