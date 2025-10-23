@@ -14,19 +14,18 @@ const SubjectsStep = ({ btnsBox }) => {
   return (
     <Box sx={styles.container}>
       <Box sx={styles.imgContainer}>
-        <Box component='img' src={img} sx={styles.img} alt='Study category' />
+        <Box alt='Study category' component='img' src={img} sx={styles.img} />
       </Box>
 
       <Box sx={styles.rightBox}>
-        <Typography variant='body1' sx={styles.description}>
+        <Typography sx={styles.description} variant='body1'>
           {t.title}
         </Typography>
 
         <Autocomplete
           disablePortal
-          options={categoriesMock}
           getOptionLabel={(option) => option.name}
-          sx={styles.dropdown}
+          options={categoriesMock}
           renderInput={(params) => (
             <TextField
               {...params}
@@ -34,9 +33,12 @@ const SubjectsStep = ({ btnsBox }) => {
               placeholder={t.mainSubjectsLabel}
             />
           )}
+          sx={styles.dropdown}
         />
 
-        <Box sx={{ mt: 'auto', width: '100%' }}>{btnsBox}</Box>
+        <Box mt='auto' sx={{ width: '100%' }}>
+          {btnsBox}
+        </Box>
       </Box>
     </Box>
   )
