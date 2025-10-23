@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { vi, describe, it, expect, beforeEach } from 'vitest'
 
-import SubjectsStep from './SubjectsStep'
+import SubjectsStep from '~/containers/tutor-home-page/subjects-step/SubjectsStep'
 import { categoriesMock } from './constants.js'
 import en from '~/constants/translations/en/become-tutor.json'
 
@@ -31,23 +31,23 @@ describe('SubjectsStep component', () => {
     expect(screen.getByTestId('mock-btns-box')).toBeInTheDocument()
   })
 
-  it('shows all categories when Autocomplete is clicked', async () => {
+  it('shows all categories on input focus', async () => {
     await user.click(input)
     const options = await screen.findAllByRole('option')
     expect(options).toHaveLength(categoriesMock.length)
-    categoriesMock.forEach((c, i) => {
-      expect(options[i]).toHaveTextContent(c.name)
+    options.forEach((option, i) => {
+      expect(option).toHaveTextContent(categoriesMock[i].name)
     })
   })
 
-  it('filters categories based on user input', async () => {
+  it('filters categories when typing in input', async () => {
     await user.type(input, 'Math')
     const options = await screen.findAllByRole('option')
     expect(options).toHaveLength(1)
     expect(options[0]).toHaveTextContent('Mathematics')
   })
 
-  it('updates input value when a category is selected', async () => {
+  it('updates input value on category selection', async () => {
     await user.click(input)
     const optionToSelect = await screen.findByText('History')
     await user.click(optionToSelect)
