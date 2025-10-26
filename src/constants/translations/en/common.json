@@ -44,6 +44,7 @@
     "email": "Email",
     "firstName": "First name",
     "lastName": "Last name",
+    "description": "description",
     "password": "Password",
     "confirmPassword": "Confirm password",
     "terms": "Terms",
