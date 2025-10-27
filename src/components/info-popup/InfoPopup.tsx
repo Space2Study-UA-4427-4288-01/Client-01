@@ -36,6 +36,7 @@ const InfoPopup: FC<InfoPopupProps> = ({ email, onClose, open }) => {
   return (
     <Dialog
       PaperProps={{ sx: styles.dialogPaper }}
+      aria-labelledby='info-popup-title'
       fullWidth={false}
       maxWidth={false}
       onClose={handleBackdropClick}
@@ -63,7 +64,7 @@ const InfoPopup: FC<InfoPopupProps> = ({ email, onClose, open }) => {
           sx={{ ...styles.iconContainer, ...styles.infoIcon }}
         />
 
-        <Typography sx={styles.title} variant='h6'>
+        <Typography id='info-popup-title' sx={styles.title} variant='h6'>
           {t('signup.confirmEmailTitle')}
         </Typography>
 
