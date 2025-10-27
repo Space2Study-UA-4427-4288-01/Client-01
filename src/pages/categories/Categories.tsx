@@ -38,7 +38,7 @@ const Categories = () => {
       categoryService.getCategories({
         name: searchRef.current
       }),
-    [searchRef]
+    []
   )
 
   const { response, loading, fetchData } = useAxios<
@@ -55,9 +55,9 @@ const Categories = () => {
 
   const handleSearchChange = useCallback(
     (value: string | ((prevState: string) => string)) => {
-      const text = typeof value === 'function' ? value(match) : value
-      setMatch(text)
-      debounceOnChange(text)
+      const newValue = typeof value === 'function' ? value(match) : value
+      setMatch(newValue)
+      debounceOnChange(newValue)
     },
     [debounceOnChange, match]
   )
@@ -115,7 +115,7 @@ const Categories = () => {
                   description={`${category.totalOffers?.student || 0} offers available`}
                   img={category.appearance?.icon || ''}
                   key={category._id}
-                  link={`/categories/${category._id}`}
+                  link={`${authRoutes.categories.path}/${category._id}`}
                   title={category.name}
                 />
               ))}
