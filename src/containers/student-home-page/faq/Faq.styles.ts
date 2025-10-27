@@ -27,7 +27,7 @@ export const styles = {
       fontWeight: 500,
       fontSize: { xs: '24px', sm: '28px', md: '32px' },
       lineHeight: '100%',
-      letterSpacing: '0.25%',
+      letterSpacing: '0.25px',
       textAlign: 'center',
       color: '#263238'
     },
