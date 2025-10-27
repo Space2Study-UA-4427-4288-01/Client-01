@@ -1,12 +1,7 @@
 import PageWrapper from '~/components/page-wrapper/PageWrapper'
-import OfferRequestBlock from '~/containers/find-offer/offer-request-block/OfferRequestBlock'
 
 const FindOffers = () => {
-  return (
-    <PageWrapper>
-      <OfferRequestBlock />
-    </PageWrapper>
-  )
+  return <PageWrapper>Find offers</PageWrapper>
 }
 
 export default FindOffers
