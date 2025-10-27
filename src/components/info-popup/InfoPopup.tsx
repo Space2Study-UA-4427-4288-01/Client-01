@@ -1,4 +1,4 @@
-import { FC, useCallback } from 'react'
+import { FC } from 'react'
 import {
   Dialog,
   DialogContent,
@@ -21,20 +21,17 @@ interface InfoPopupProps {
 const InfoPopup: FC<InfoPopupProps> = ({ email, onClose, open }) => {
   const { t } = useTranslation()
 
-  const handleBackdropClick = useCallback(
-    (
-      _event:
-        | React.MouseEvent<HTMLDivElement>
-        | React.KeyboardEvent<HTMLDivElement>,
-      reason: 'backdropClick' | 'escapeKeyDown'
-    ) => {
-      if (reason === 'backdropClick') {
-        return
-      }
-      onClose()
-    },
-    [onClose]
-  )
+  const handleBackdropClick = (
+    _event:
+      | React.MouseEvent<HTMLDivElement>
+      | React.KeyboardEvent<HTMLDivElement>,
+    reason: 'backdropClick' | 'escapeKeyDown'
+  ) => {
+    if (reason === 'backdropClick') {
+      return
+    }
+    onClose()
+  }
 
   return (
     <Dialog
