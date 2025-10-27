@@ -63,11 +63,11 @@ const Categories = () => {
   )
 
   const handleSearch = useCallback(() => {
-    if (match.trim()) {
+    if (match.trim() && !loading) {
       searchRef.current = match.trim()
       void fetchData()
     }
-  }, [match, fetchData])
+  }, [match, fetchData, loading])
 
   const handleOpenModal = () => openModal({ component: <CreateSubjectModal /> })
 
