@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import Autocomplete from '@mui/material/Autocomplete'
@@ -5,21 +6,25 @@ import TextField from '@mui/material/TextField'
 
 import { styles } from '~/containers/tutor-home-page/subjects-step/SubjectsStep.styles'
 import img from '~/assets/img/tutor-home-page/become-tutor/study-category.svg'
-import en from '~/constants/translations/en/become-tutor.json'
 import { categoriesMock } from './constants.js'
 
 const SubjectsStep = ({ btnsBox }) => {
-  const t = en.categories
+  const { t } = useTranslation()
 
   return (
     <Box sx={styles.container}>
       <Box sx={styles.imgContainer}>
-        <Box alt='Study category' component='img' src={img} sx={styles.img} />
+        <Box
+          component='img'
+          src={img}
+          alt={t('becomeTutor.categories.imageAlt')}
+          sx={styles.img}
+        />
       </Box>
 
       <Box sx={styles.rightBox}>
         <Typography sx={styles.description} variant='body1'>
-          {t.title}
+          {t('becomeTutor.categories.title')}
         </Typography>
 
         <Autocomplete
@@ -29,8 +34,8 @@ const SubjectsStep = ({ btnsBox }) => {
           renderInput={(params) => (
             <TextField
               {...params}
-              label={t.mainSubjectsLabel}
-              placeholder={t.mainSubjectsLabel}
+              label={t('becomeTutor.categories.mainSubjectsLabel')}
+              placeholder={t('becomeTutor.categories.mainSubjectsLabel')}
             />
           )}
           sx={styles.dropdown}

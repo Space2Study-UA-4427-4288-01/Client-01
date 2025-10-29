@@ -5,16 +5,12 @@ export const styles = {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'stretch',
-    gap: '40px',
+    gap: { xs: '30px', md: '40px' },
     paddingBottom: { xs: '30px', sm: '0px' },
-    ...fadeAnimation,
-
-    '@media (max-width: 1024px)': {
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'center',
-      gap: '30px'
-    }
+    flexDirection: { xs: 'column', md: 'row' },
+    alignItems: { xs: 'center', md: 'stretch' },
+    justifyContent: { xs: 'center', md: 'space-between' },
+    ...fadeAnimation
   },
 
   imgContainer: {
@@ -26,14 +22,8 @@ export const styles = {
 
   img: {
     width: '100%',
-    maxWidth: '350px',
-    height: 'auto',
-    '@media (max-width: 1024px)': {
-      maxWidth: '280px'
-    },
-    '@media (max-width: 600px)': {
-      maxWidth: '220px'
-    }
+    maxWidth: { xs: '220px', sm: '280px', md: '350px' },
+    height: 'auto'
   },
 
   rightBox: {
@@ -43,21 +33,14 @@ export const styles = {
     gap: '20px',
     width: '100%',
     maxWidth: '420px',
-
-    '@media (max-width: 1024px)': {
-      alignItems: 'center',
-      textAlign: 'center',
-      maxWidth: '90%'
-    }
+    alignItems: { xs: 'center', md: 'flex-start' },
+    textAlign: { xs: 'center', md: 'left' }
   },
 
   description: {
     fontSize: '14px',
     lineHeight: '20px',
-    textAlign: 'left',
-    '@media (max-width: 1024px)': {
-      textAlign: 'center'
-    }
+    textAlign: { xs: 'center', md: 'left' }
   },
 
   dropdown: {

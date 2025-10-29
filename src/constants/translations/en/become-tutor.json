@@ -18,7 +18,8 @@
     "subjectLabel": "Subject",
     "btnText": "Add one more subject",
     "emptyFields": "All fields must be filled",
-    "sameSubject": "You have the same subject"
+    "sameSubject": "You have the same subject",
+    "imageAlt": "Study category illustration"
   },
   "photo": {
     "imageAlt": "Your photo",
