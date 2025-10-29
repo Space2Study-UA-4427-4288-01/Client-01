@@ -4,7 +4,20 @@ import { vi, describe, it, expect, beforeEach } from 'vitest'
 
 import SubjectsStep from '~/containers/tutor-home-page/subjects-step/SubjectsStep'
 import { categoriesMock } from '~/containers/tutor-home-page/subjects-step/constants.js'
-import en from '~/constants/translations/en/become-tutor.json'
+
+vi.mock('react-i18next', () => ({
+  useTranslation: () => ({
+    t: (key) => {
+      const map = {
+        'becomeTutor.categories.title':
+          'Please choose the main subjects based on the category. You can add others later.',
+        'becomeTutor.categories.mainSubjectsLabel': 'Main Tutoring Category',
+        'becomeTutor.categories.imageAlt': 'Study category'
+      }
+      return map[key]
+    }
+  })
+}))
 
 vi.mock('@emotion/react', () => ({
   useTheme: () => ({
@@ -13,7 +26,6 @@ vi.mock('@emotion/react', () => ({
 }))
 
 const mockBtnsBox = <div data-testid='mock-btns-box'>Mock Buttons</div>
-const t = en.categories
 
 describe('SubjectsStep component', () => {
   let user, input
@@ -21,11 +33,15 @@ describe('SubjectsStep component', () => {
   beforeEach(() => {
     render(<SubjectsStep btnsBox={mockBtnsBox} />)
     user = userEvent.setup()
-    input = screen.getByRole('combobox', { name: t.mainSubjectsLabel })
+    input = screen.getByRole('combobox', { name: 'Main Tutoring Category' })
   })
 
   it('renders all elements correctly', () => {
-    expect(screen.getByText(t.title)).toBeInTheDocument()
+    expect(
+      screen.getByText(
+        'Please choose the main subjects based on the category. You can add others later.'
+      )
+    ).toBeInTheDocument()
     expect(screen.getByAltText('Study category')).toBeInTheDocument()
     expect(input).toBeInTheDocument()
     expect(screen.getByTestId('mock-btns-box')).toBeInTheDocument()
