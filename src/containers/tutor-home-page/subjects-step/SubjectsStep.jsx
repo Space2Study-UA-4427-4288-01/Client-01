@@ -15,9 +15,9 @@ const SubjectsStep = ({ btnsBox }) => {
     <Box sx={styles.container}>
       <Box sx={styles.imgContainer}>
         <Box
+          alt={t('becomeTutor.categories.imageAlt')}
           component='img'
           src={img}
-          alt={t('becomeTutor.categories.imageAlt')}
           sx={styles.img}
         />
       </Box>
