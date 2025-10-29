@@ -39,11 +39,11 @@ const CategoriesList: FC<CategoriesListProps> = ({
     () =>
       categories.map((category: CategoryInterface) => (
         <CardWithLink
-          key={category._id}
-          img={category.appearance?.icon || ''}
-          title={category.name}
           description={`${category.totalOffers?.[oppositeRole] || 0} ${t('categoriesPage.offers')}`}
+          img={category.appearance?.icon || ''}
+          key={category._id}
           link={`${authRoutes.subjects.path}?categoryId=${category._id}`}
+          title={category.name}
         />
       )),
     [categories, oppositeRole, t]
@@ -68,8 +68,8 @@ const CategoriesList: FC<CategoriesListProps> = ({
   return (
     <Box sx={styles.container}>
       <CardsList
-        cards={categoryCards}
         btnText={t('categoriesPage.viewMore')}
+        cards={categoryCards}
         isExpandable={isExpandable}
         loading={loading}
         onClick={onLoadMore}
