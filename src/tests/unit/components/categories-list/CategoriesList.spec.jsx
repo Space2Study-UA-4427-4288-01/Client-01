@@ -165,7 +165,7 @@ describe('CategoriesList component', () => {
     })
 
     it('should not show categories when loading', () => {
-      renderWithProviders(<CategoriesList {...emptyProps} loading={true} />)
+      renderWithProviders(<CategoriesList {...emptyProps} loading />)
 
       expect(screen.queryByText('Mathematics')).not.toBeInTheDocument()
     })
