@@ -33,11 +33,11 @@ const CategoriesList: FC<CategoriesListProps> = ({
   const { t } = useTranslation()
   const { userRole } = useAppSelector((state) => state.appMain)
 
-  const oppositeRole = getOpositeRole(userRole)
-
   const categoryCards = useMemo(
-    () =>
-      categories.map((category: CategoryInterface) => (
+    () => {
+      const oppositeRole = getOpositeRole(userRole)
+
+      return categories.map((category: CategoryInterface) => (
         <CardWithLink
           description={`${category.totalOffers?.[oppositeRole] || 0} ${t('categoriesPage.offers')}`}
           img={category.appearance?.icon || ''}
@@ -45,8 +45,9 @@ const CategoriesList: FC<CategoriesListProps> = ({
           link={`${authRoutes.subjects.path}?categoryId=${category._id}`}
           title={category.name}
         />
-      )),
-    [categories, oppositeRole, t]
+      ))
+    },
+    [categories, userRole, t]
   )
 
   if (!categories.length && !loading) {
