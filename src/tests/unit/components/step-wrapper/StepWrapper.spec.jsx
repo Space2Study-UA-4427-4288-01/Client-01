@@ -1,5 +1,6 @@
 import { vi } from 'vitest'
 import { fireEvent, screen, waitFor } from '@testing-library/react'
+import React from 'react'
 
 import { StepProvider } from '~/context/step-context'
 import StepWrapper from '~/components/step-wrapper/StepWrapper'
@@ -72,5 +73,64 @@ describe('StepWrapper test', () => {
     const firstChildren = screen.getByText(/1/i)
 
     expect(firstChildren).toBeInTheDocument()
+  })
+
+  it('should disable Next button when child calls setIsStepInvalid(true)', async () => {
+    // Create a test component that renders btnsBox and makes the step invalid
+    const TestComponentMakeInvalid = ({ setIsStepInvalid, btnsBox }) => {
+      // Call setIsStepInvalid(true) on mount to test button disable
+      React.useEffect(() => {
+        setIsStepInvalid(true)
+      }, [setIsStepInvalid])
+
+      return (
+        <div>
+          <div>Test Step - Invalid</div>
+          {btnsBox}
+        </div>
+      )
+    }
+
+    const childrenWithInvalidation = [<TestComponentMakeInvalid key='1' />]
+
+    // Clear previous render
+    document.body.innerHTML = ''
+
+    renderWithProviders(
+      <StepProvider initialValues={initialValues} stepLabels={stepsMock}>
+        <StepWrapper steps={stepsMock}>{childrenWithInvalidation}</StepWrapper>
+      </StepProvider>
+    )
+
+    await waitFor(() => {
+      const nextButton = screen.getByText(/common.next/i)
+      expect(nextButton).toBeDisabled()
+    })
+  })
+
+  it('should pass setIsStepInvalid prop to child components', () => {
+    // Test that setIsStepInvalid is passed as prop using TempComponent
+    const TempComponentWithProps = ({ setIsStepInvalid }) => {
+      return <div data-testid='temp-with-props'>{typeof setIsStepInvalid}</div>
+    }
+
+    const childrenWithProps = [<TempComponentWithProps key='1' />]
+
+    // Clear and render with prop-testing component
+    document.body.innerHTML = ''
+    renderWithProviders(
+      <StepProvider initialValues={initialValues} stepLabels={stepsMock}>
+        <StepWrapper steps={stepsMock}>{childrenWithProps}</StepWrapper>
+      </StepProvider>
+    )
+
+    const tempComponent = screen.getByTestId('temp-with-props')
+    expect(tempComponent).toHaveTextContent('function')
+  })
+
+  it('should initialize with Next button enabled (isStepInvalid defaults to false)', () => {
+    // Just check that Next button starts enabled with normal children
+    const nextButton = screen.getByText(/Next/i)
+    expect(nextButton).not.toBeDisabled()
   })
 })
