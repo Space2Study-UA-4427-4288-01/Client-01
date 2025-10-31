@@ -32,7 +32,8 @@ export const styles = {
     width: '100%',
     maxWidth: '420px',
     alignItems: { xs: 'center', md: 'flex-start' },
-    textAlign: { xs: 'center', md: 'left' }
+    textAlign: { xs: 'center', md: 'left' },
+    minHeight: { md: '350px' }
   },
 
   description: {
@@ -41,7 +42,19 @@ export const styles = {
     textAlign: { xs: 'center', md: 'left' }
   },
 
+  dropdownsWrapper: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '20px',
+    width: '100%'
+  },
+
   dropdown: {
+    width: '100%'
+  },
+
+  btnsBoxContainer: {
+    mt: 'auto',
     width: '100%'
   }
 }
