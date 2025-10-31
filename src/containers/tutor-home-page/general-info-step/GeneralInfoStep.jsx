@@ -20,7 +20,7 @@ const GeneralInfoStep = ({ btnsBox, stepLabel, setIsStepInvalid }) => {
   const [cities, setCities] = useState([])
   const [countries, setCountries] = useState([])
   const [loading, setLoading] = useState(false)
-  const [autocomleteKey, setAutokompleteKey] = useState(0)
+  const [autocomleteKey, setAutocompleteKey] = useState(0)
   const { t } = useTranslation()
   const { handleStepData } = useStepContext()
   const {
@@ -54,19 +54,20 @@ const GeneralInfoStep = ({ btnsBox, stepLabel, setIsStepInvalid }) => {
   useEffect(() => {
     if (data.country && data.country.id !== 0) {
       setLoading(true)
-      data.city = null
+      handleDataChange({ ...data, city: null })
       setCities([])
       locationService.getCitiesByCountryId(data.country.id).then((res) => {
-        let citiesList = res.data.map((city) => {
-          return {
-            label: city.name,
-            id: city.id
-          }
-        })
-        citiesList = citiesList.filter(
-          (city, index, arr) =>
-            arr.findIndex((c) => c.label === city.label) === index
-        )
+        let citiesList = res.data
+          .map((city) => {
+            return {
+              label: city.name,
+              id: city.id
+            }
+          })
+          .filter(
+            (city, index, arr) =>
+              arr.findIndex((c) => c.label === city.label) === index
+          )
 
         setCities(citiesList)
         setLoading(false)
@@ -74,12 +75,8 @@ const GeneralInfoStep = ({ btnsBox, stepLabel, setIsStepInvalid }) => {
     }
   }, [data.country])
   useEffect(() => {
-    console.log(errors)
-    if (errors.firstName !== '' || errors.lastName !== '') {
-      setIsStepInvalid(true)
-      return
-    }
-    setIsStepInvalid(false)
+    const isStepInvalid = errors.firstName !== '' || errors.lastName !== ''
+    setIsStepInvalid(isStepInvalid)
   }, [errors, setIsStepInvalid])
   const handleCountryChange = (event, newVal) => {
     const fakeEvent = {
@@ -110,7 +107,7 @@ const GeneralInfoStep = ({ btnsBox, stepLabel, setIsStepInvalid }) => {
         }
       })
       setCountries(countriesOptions)
-      setAutokompleteKey((prev) => prev + 1)
+      setAutocompleteKey((prev) => prev + 1)
     })
   }
 
@@ -125,7 +122,7 @@ const GeneralInfoStep = ({ btnsBox, stepLabel, setIsStepInvalid }) => {
           onSubmit={handleSubmit}
           sx={styles.formContainer}
         >
-          <Typography sx={{ mb: '10px' }}>
+          <Typography sx={styles.stepTitle}>
             Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet
             sint.
           </Typography>

@@ -13,7 +13,6 @@ export const styles = {
     maxWidth: { md: '50%', lg: '450px' },
     maxHeight: 'inherit',
     display: { xs: 'none', md: 'flex' }
-    //pl: { lg: '96px', md: '30px' }
   },
   img: {
     objectFit: 'contain',
@@ -23,9 +22,12 @@ export const styles = {
     width: '430px',
     minHeight: '420px',
     maxWidth: { lg: '430px' },
-    '& .MuiGrid-item': {
+    '& .MuiGrid-item.MuiGrid-item': {
       paddingTop: '30px'
     }
+  },
+  stepTitle: {
+    marginBottom: '10px'
   },
   btnsRow: {
     width: '430px',
