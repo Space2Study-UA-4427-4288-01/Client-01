@@ -37,7 +37,7 @@ const AddPhotoStep = ({ btnsBox }) => {
       if (prev) URL.revokeObjectURL(prev)
       return objUrl
     })
-  }, [photoFile, previewUrl])
+  }, [photoFile])
 
   useEffect(() => {
     return () => {
@@ -114,7 +114,7 @@ const AddPhotoStep = ({ btnsBox }) => {
           </Typography>
 
           <input
-            accept={[...validationData.filesTypes, '.jpg,.jpeg,.png'].join(',')}
+            accept={[...validationData.filesTypes].join(',')}
             data-testid='photo-input'
             onChange={addFilesManually}
             ref={inputRef}

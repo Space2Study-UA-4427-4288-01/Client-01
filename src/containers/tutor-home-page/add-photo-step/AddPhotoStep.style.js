@@ -30,6 +30,7 @@ export const style = {
     maxWidth: '440px',
     width: '100%',
     aspectRatio: '1',
+    overflow: 'hidden',
     border: '2px dashed',
     borderColor: 'primary.200',
     borderRadius: '20px',
