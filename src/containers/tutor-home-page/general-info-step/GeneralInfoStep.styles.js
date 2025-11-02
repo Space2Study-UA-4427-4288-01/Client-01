@@ -5,7 +5,6 @@ export const styles = {
     display: 'flex',
     justifyContent: 'space-between',
     height: { sm: '485px' },
-    paddingBottom: { xs: '30px', sm: '0' },
     ...fadeAnimation
   },
   imgContainer: {
