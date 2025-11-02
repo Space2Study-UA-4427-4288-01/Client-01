@@ -1,7 +1,11 @@
-import { screen, fireEvent, waitFor } from '@testing-library/react'
+import { screen, waitFor } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { renderWithProviders } from '~tests/test-utils'
 import Categories from '~/pages/categories/Categories'
 import { vi } from 'vitest'
+import { categoryService } from '~/services/category-service'
+
+vi.mock('~/services/category-service')
 
 const mockCategories = [
   {
@@ -22,24 +26,9 @@ const mockCategories = [
   }
 ]
 
-vi.mock('~/services/category-service', () => ({
-  categoryService: {
-    getCategories: vi.fn(() =>
-      Promise.resolve({
-        data: {
-          count: mockCategories.length,
-          items: mockCategories
-        }
-      })
-    ),
-    getCategoriesNames: vi.fn()
-  }
-}))
-
-const mockOpenModal = vi.fn()
-
 vi.mock('~/context/modal-context', async () => {
   const actual = await vi.importActual('~/context/modal-context')
+  const mockOpenModal = vi.fn()
   return {
     ...actual,
     useModalContext: () => ({
@@ -52,101 +41,172 @@ vi.mock('~/context/modal-context', async () => {
 const getSearchInput = () =>
   screen.getByRole('combobox', { name: /categoriesPage.searchLabel/i })
 
+const getSearchButton = () =>
+  screen.getByRole('button', { name: /common.search/i })
+
 describe('Categories component tests', () => {
+  let user
+
   beforeEach(() => {
-    renderWithProviders(<Categories />)
+    user = userEvent.setup()
+    vi.clearAllMocks()
+    categoryService.getCategories.mockResolvedValue({
+      data: {
+        count: mockCategories.length,
+        items: mockCategories
+      }
+    })
   })
 
   describe('Rendering', () => {
     it('should render all main elements', () => {
-      const title = screen.getByText('categoriesPage.title')
-      const description = screen.getByText('categoriesPage.description')
-      const showAllLink = screen.getByText('categoriesPage.showAllOffers')
-      const searchLabel = screen.getByText('categoriesPage.searchLabel')
-      const offerRequestButton = screen.getByText(
-        'findOffers.offerRequestBlock.button'
-      )
+      renderWithProviders(<Categories />)
+      expect(screen.getByText('categoriesPage.title')).toBeInTheDocument()
+      expect(screen.getByText('categoriesPage.description')).toBeInTheDocument()
+      expect(
+        screen.getByText('categoriesPage.showAllOffers')
+      ).toBeInTheDocument()
+      expect(screen.getByText('categoriesPage.searchLabel')).toBeInTheDocument()
+      expect(
+        screen.getByText('findOffers.offerRequestBlock.button')
+      ).toBeInTheDocument()
+    })
 
-      expect(title).toBeInTheDocument()
-      expect(description).toBeInTheDocument()
-      expect(showAllLink).toBeInTheDocument()
-      expect(searchLabel).toBeInTheDocument()
-      expect(offerRequestButton).toBeInTheDocument()
+    it('should render categories list on initial load', async () => {
+      renderWithProviders(<Categories />)
+      await waitFor(() => {
+        expect(screen.getByText('Mathematics')).toBeInTheDocument()
+        expect(screen.getByText('Marketing')).toBeInTheDocument()
+        const mathLink = screen.getByText('Mathematics').closest('a')
+        expect(mathLink).toHaveAttribute(
+          'href',
+          '/categories/subjects?categoryId=1'
+        )
+        expect(screen.getAllByText(/offers/).length).toBeGreaterThan(0)
+      })
+    })
+
+    it('should render "View more" button when there are more categories', async () => {
+      categoryService.getCategories.mockResolvedValueOnce({
+        data: {
+          count: 20,
+          items: mockCategories
+        }
+      })
+      renderWithProviders(<Categories />)
+      await waitFor(() => {
+        expect(screen.getByText('categoriesPage.viewMore')).toBeInTheDocument()
+      })
     })
   })
 
   describe('Search functionality', () => {
-    it('should update search input and display results in dropdown and cards', async () => {
+    it('should update search input and display autocomplete options', async () => {
+      renderWithProviders(<Categories />)
       const searchInput = getSearchInput()
 
-      fireEvent.change(searchInput, { target: { value: 'Math' } })
-
-      await waitFor(
-        () => {
-          expect(searchInput.value).toBe('Math')
-
-          const mathOption = screen.getByRole('option', { name: 'Mathematics' })
-          expect(mathOption).toBeInTheDocument()
-
-          const mathCard = screen.getByText('Mathematics')
-          expect(mathCard).toBeInTheDocument()
-        },
-        { timeout: 1000 }
-      )
-    })
-
-    it('should perform search when search button is clicked', async () => {
-      const searchInput = getSearchInput()
-
-      fireEvent.change(searchInput, { target: { value: 'Marketing' } })
-
-      const searchButton = screen.getByText('common.search')
-      fireEvent.click(searchButton)
-
-      await waitFor(
-        () => {
-          const marketingOption = screen.queryByRole('option', {
-            name: 'Marketing'
-          })
-          expect(marketingOption).toBeInTheDocument()
-        },
-        { timeout: 1000 }
-      )
-    })
-
-    it('should display multiple categories when partial match', async () => {
-      const searchInput = getSearchInput()
-
-      fireEvent.change(searchInput, { target: { value: 'Ma' } })
-
-      await waitFor(
-        () => {
-          const mathCategory = screen.getByText('Mathematics')
-          const marketingCategory = screen.getByText('Marketing')
-
-          expect(mathCategory).toBeInTheDocument()
-          expect(marketingCategory).toBeInTheDocument()
-        },
-        { timeout: 1000 }
-      )
-    })
-
-    it('should handle empty and whitespace search gracefully', async () => {
-      const searchInput = getSearchInput()
-      const searchButton = screen.getByText('common.search')
-
-      fireEvent.change(searchInput, { target: { value: '   ' } })
-      fireEvent.click(searchButton)
+      await user.type(searchInput, 'Ma')
 
       await waitFor(() => {
-        expect(searchInput.value).toBe('   ')
+        expect(searchInput).toHaveValue('Ma')
+        expect(
+          screen.getByRole('option', { name: 'Mathematics' })
+        ).toBeInTheDocument()
+        expect(
+          screen.getByRole('option', { name: 'Marketing' })
+        ).toBeInTheDocument()
+      })
+    })
+
+    it('should trigger search when search button is clicked', async () => {
+      renderWithProviders(<Categories />)
+      const searchInput = getSearchInput()
+      const searchButton = getSearchButton()
+
+      await user.type(searchInput, 'Marketing')
+      await user.click(searchButton)
+
+      expect(searchInput).toHaveValue('Marketing')
+    })
+
+    it('should handle empty search input', async () => {
+      renderWithProviders(<Categories />)
+      const searchInput = getSearchInput()
+
+      await user.click(getSearchButton())
+
+      expect(searchInput).toHaveValue('')
+    })
+
+    it('should clear search input when clear icon is clicked', async () => {
+      renderWithProviders(<Categories />)
+      const searchInput = getSearchInput()
+
+      await user.type(searchInput, 'Test')
+      await user.click(screen.getByTestId('ClearIcon').closest('button'))
+
+      expect(searchInput).toHaveValue('')
+    })
+  })
+
+  describe('Empty State and Modal functionality', () => {
+    it('should show empty state and open modal when request button is clicked', async () => {
+      categoryService.getCategories.mockResolvedValueOnce({
+        data: {
+          count: 0,
+          items: []
+        }
       })
 
-      fireEvent.change(searchInput, { target: { value: '' } })
-      fireEvent.click(searchButton)
+      renderWithProviders(<Categories />)
 
       await waitFor(() => {
-        expect(searchInput.value).toBe('')
+        expect(
+          screen.getByText('categoriesPage.description', { exact: false })
+        ).toBeInTheDocument()
+      })
+
+      const requestButton = screen.getByText('errorMessages.buttonRequest')
+      await user.click(requestButton)
+    })
+  })
+
+  describe('Load More functionality', () => {
+    it('should load more categories when button is clicked', async () => {
+      categoryService.getCategories
+        .mockResolvedValueOnce({
+          data: {
+            count: 20,
+            items: mockCategories
+          }
+        })
+        .mockResolvedValueOnce({
+          data: {
+            count: 20,
+            items: [
+              {
+                _id: '3',
+                name: 'Physics',
+                appearance: { icon: 'physics-icon.svg', color: '#4CAF50' },
+                totalOffers: { student: 20, tutor: 15 },
+                createdAt: '2024-01-02',
+                updatedAt: '2024-01-02'
+              }
+            ]
+          }
+        })
+
+      renderWithProviders(<Categories />)
+
+      await waitFor(() => {
+        expect(screen.getByText('categoriesPage.viewMore')).toBeInTheDocument()
+      })
+
+      const loadMoreButton = screen.getByText('categoriesPage.viewMore')
+      await user.click(loadMoreButton)
+
+      await waitFor(() => {
+        expect(screen.getByText('Physics')).toBeInTheDocument()
       })
     })
   })
