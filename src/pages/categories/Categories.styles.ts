@@ -35,20 +35,5 @@ export const styles = {
   searchToolbar: {
     borderRadius: '70px',
     mb: { xs: '20px', sm: '25px', md: '30px' }
-  },
-  // TODO: Temporary styles for search results demo
-  // Will be replaced/modified when CategoriesList component is integrated
-  searchResults: {
-    mt: { xs: '20px', sm: '25px', md: '30px' }
-  },
-  categoriesGrid: {
-    display: 'grid',
-    gridTemplateColumns: {
-      xs: '1fr',
-      sm: 'repeat(2, 1fr)',
-      md: 'repeat(3, 1fr)',
-      lg: 'repeat(4, 1fr)'
-    },
-    gap: { xs: '16px', sm: '20px', md: '24px' }
   }
 }
