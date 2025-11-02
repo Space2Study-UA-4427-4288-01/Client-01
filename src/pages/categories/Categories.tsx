@@ -1,4 +1,4 @@
-import { useCallback, useState, useRef } from 'react'
+import { useState, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import Box from '@mui/material/Box'
@@ -10,64 +10,39 @@ import TitleWithDescription from '~/components/title-with-description/TitleWithD
 import SearchAutocomplete from '~/components/search-autocomplete/SearchAutocomplete'
 import DirectionLink from '~/components/direction-link/DirectionLink'
 import AppToolbar from '~/components/app-toolbar/AppToolbar'
-import CardWithLink from '~/components/card-with-link/CardWithLink'
-import NotFoundResults from '~/components/not-found-results/NotFoundResults'
-import Loader from '~/components/loader/Loader'
+import CategoriesList from '~/components/categories-list/CategoriesList'
 import CreateSubjectModal from '~/containers/find-offer/create-new-subject/CreateNewSubject'
 
 import { authRoutes } from '~/router/constants/authRoutes'
 import { categoryService } from '~/services/category-service'
-import { useDebounce } from '~/hooks/use-debounce'
-import useAxios from '~/hooks/use-axios'
-import { defaultResponses } from '~/constants'
+import useLoadMore from '~/hooks/use-load-more'
+import useBreakpoints from '~/hooks/use-breakpoints'
+import { itemsLoadLimit } from '~/constants'
 import { useModalContext } from '~/context/modal-context'
-import { ItemsWithCount, CategoryInterface } from '~/types'
+import { CategoryInterface } from '~/types'
+import { getScreenBasedLimit } from '~/utils/helper-functions'
 import { styles } from './Categories.styles'
 
 const Categories = () => {
   const [match, setMatch] = useState<string>('')
-  const searchRef = useRef<string>('')
   const { t } = useTranslation()
   const { openModal } = useModalContext()
+  const breakpoints = useBreakpoints()
 
-  // Search functionality - provides filtered categories data
-  // Available for integration: response.items, loading, match
-  // For use in "Implement list of categories block" task
-  const getCategories = useCallback(
-    () =>
-      categoryService.getCategories({
-        name: searchRef.current
-      }),
-    []
-  )
+  const cardsLimit = getScreenBasedLimit(breakpoints, itemsLoadLimit)
+  const params = useMemo(() => ({ name: match }), [match])
 
-  const { response, loading, fetchData } = useAxios<
-    ItemsWithCount<CategoryInterface>
-  >({
-    service: getCategories,
-    defaultResponse: defaultResponses.itemsWithCount
+  const {
+    data: categories,
+    loading,
+    resetData,
+    loadMore,
+    isExpandable
+  } = useLoadMore<CategoryInterface, { name: string }>({
+    service: categoryService.getCategories,
+    limit: cardsLimit,
+    params
   })
-
-  const debounceOnChange = useDebounce((text: string) => {
-    searchRef.current = text
-    void fetchData()
-  })
-
-  const handleSearchChange = useCallback(
-    (value: string | ((prevState: string) => string)) => {
-      const newValue = typeof value === 'function' ? value(match) : value
-      setMatch(newValue)
-      debounceOnChange(newValue)
-    },
-    [debounceOnChange, match]
-  )
-
-  const handleSearch = useCallback(() => {
-    if (match.trim() && !loading) {
-      searchRef.current = match.trim()
-      void fetchData()
-    }
-  }, [match, fetchData, loading])
 
   const handleOpenModal = () => openModal({ component: <CreateSubjectModal /> })
 
@@ -91,48 +66,24 @@ const Categories = () => {
 
       <AppToolbar sx={styles.searchToolbar}>
         <SearchAutocomplete
-          onSearchChange={handleSearch}
-          options={response?.items?.map((category) => category.name) || []}
+          onSearchChange={resetData}
+          options={categories?.map((category) => category.name) || []}
           search={match}
-          setSearch={handleSearchChange}
+          setSearch={setMatch}
           textFieldProps={{
             label: t('categoriesPage.searchLabel')
           }}
         />
       </AppToolbar>
 
-      {/* TODO: Цей блок буде замінений на CategoriesList компонент (task: Implement list of categories block) */}
-      {/* ВАЖЛИВО: NotFoundResults має залишитися для показу коли нічого не знайдено при пошуку */}
-      {/* Поточна реалізація - тимчасова, для демонстрації функціоналу пошуку */}
-      {match && (
-        <Box sx={styles.searchResults}>
-          {loading ? (
-            <Loader />
-          ) : response?.items && response.items.length > 0 ? (
-            <Box sx={styles.categoriesGrid}>
-              {response.items.map((category: CategoryInterface) => (
-                <CardWithLink
-                  description={`${category.totalOffers?.student || 0} offers available`}
-                  img={category.appearance?.icon || ''}
-                  key={category._id}
-                  link={`${authRoutes.categories.path}/${category._id}`}
-                  title={category.name}
-                />
-              ))}
-            </Box>
-          ) : (
-            <NotFoundResults
-              buttonText={t('errorMessages.buttonRequest', {
-                name: 'categories'
-              })}
-              description={t('errorMessages.tryAgainText', {
-                name: 'categories'
-              })}
-              onClick={handleOpenModal}
-            />
-          )}
-        </Box>
-      )}
+      <CategoriesList
+        categories={categories}
+        isExpandable={isExpandable}
+        loading={loading}
+        onLoadMore={loadMore}
+        onRequestNewCategory={handleOpenModal}
+        searchQuery={match}
+      />
     </PageWrapper>
   )
 }
