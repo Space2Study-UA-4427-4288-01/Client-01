@@ -8,15 +8,3 @@ vi.mock('react-i18next', () => ({
     }
   }
 }))
-
-if (!globalThis.URL) {
-  globalThis.URL = {}
-}
-Object.defineProperty(globalThis.URL, 'createObjectURL', {
-  value: vi.fn(() => 'blob://fake'),
-  writable: true
-})
-Object.defineProperty(globalThis.URL, 'revokeObjectURL', {
-  value: vi.fn(() => {}),
-  writable: true
-})
