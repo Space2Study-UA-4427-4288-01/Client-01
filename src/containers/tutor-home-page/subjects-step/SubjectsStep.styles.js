@@ -3,11 +3,9 @@ import { fadeAnimation } from '~/styles/app-theme/custom-animations'
 export const styles = {
   container: {
     display: 'flex',
-    flexDirection: { xs: 'column', md: 'row' },
-    gap: { xs: '30px', md: '40px' },
-    paddingBottom: { xs: '30px', sm: '0px' },
-    alignItems: { xs: 'center', md: 'stretch' },
-    justifyContent: { xs: 'center', md: 'space-between' },
+    justifyContent: 'space-between',
+    height: { sm: '485px' },
+    paddingBottom: { xs: '30px', sm: '0' },
     ...fadeAnimation
   },
 
@@ -37,7 +35,7 @@ export const styles = {
   },
 
   description: {
-    fontSize: '14px',
+    fontSize: '16px',
     lineHeight: '20px',
     textAlign: { xs: 'center', md: 'left' }
   },
