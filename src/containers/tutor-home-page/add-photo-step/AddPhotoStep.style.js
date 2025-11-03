@@ -3,6 +3,7 @@ import { fadeAnimation } from '~/styles/app-theme/custom-animations'
 export const style = {
   root: {
     display: 'flex',
+    flexDirection: { sm: 'column', md: 'row' },
     justifyContent: 'space-between',
     gap: '40px',
     height: { sm: '485px' },
@@ -29,6 +30,7 @@ export const style = {
     maxWidth: '440px',
     width: '100%',
     aspectRatio: '1',
+    overflow: 'hidden',
     border: '2px dashed',
     borderColor: 'primary.200',
     borderRadius: '20px',
@@ -54,14 +56,13 @@ export const style = {
     button: {
       textAlign: 'center'
     },
+    buttonText: {
+      fontWeight: 500,
+      fontSize: { xs: '14px', sm: '16px' }
+    },
     root: {
       display: 'flex',
       flexDirection: 'column',
-      justifyContent: 'space-around',
-      border: '1px solid',
-      borderColor: 'primary.200',
-      borderRadius: '5px',
-      maxWidth: '270px',
       overflow: 'auto'
     }
   }

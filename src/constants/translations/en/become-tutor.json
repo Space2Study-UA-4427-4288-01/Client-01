@@ -25,8 +25,10 @@
     "imageAlt": "Your photo",
     "button": "Upload your profile photo",
     "placeholder": "Photo Preview",
+	 "dropHere": "Drop photo here",
     "description": "Please upload a photo that represents you and helps others recognize you.",
     "typeError": "Wrong file type. Only .png/.jpg/.jpeg files are allowed.",
+	 "maxSize": "Maximum file size should be less than 10 MB",
     "fileSizeError": "Size for one file cannot be more than 10MB."
   },
   "successMessage": "Success! Your data were added."
