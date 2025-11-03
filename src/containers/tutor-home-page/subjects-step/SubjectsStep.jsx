@@ -6,7 +6,7 @@ import TextField from '@mui/material/TextField'
 
 import { styles } from '~/containers/tutor-home-page/subjects-step/SubjectsStep.styles'
 import img from '~/assets/img/tutor-home-page/become-tutor/study-category.svg'
-import { categoriesMock } from './constants.js'
+import { categoriesMock, subjectsMock } from './constants.js'
 
 const SubjectsStep = ({ btnsBox }) => {
   const { t } = useTranslation()
@@ -27,23 +27,37 @@ const SubjectsStep = ({ btnsBox }) => {
           {t('becomeTutor.categories.title')}
         </Typography>
 
-        <Autocomplete
-          disablePortal
-          getOptionLabel={(option) => option.name}
-          options={categoriesMock}
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              label={t('becomeTutor.categories.mainSubjectsLabel')}
-              placeholder={t('becomeTutor.categories.mainSubjectsLabel')}
-            />
-          )}
-          sx={styles.dropdown}
-        />
+        <Box sx={styles.dropdownsWrapper}>
+          <Autocomplete
+            disablePortal
+            getOptionLabel={(option) => option.name}
+            options={categoriesMock}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label={t('becomeTutor.categories.mainSubjectsLabel')}
+                placeholder={t('becomeTutor.categories.mainSubjectsLabel')}
+              />
+            )}
+            sx={styles.dropdown}
+          />
 
-        <Box mt='auto' sx={{ width: '100%' }}>
-          {btnsBox}
+          <Autocomplete
+            disablePortal
+            getOptionLabel={(option) => option.name}
+            options={subjectsMock}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label={t('becomeTutor.categories.subjectLabel')}
+                placeholder={t('becomeTutor.categories.subjectLabel')}
+              />
+            )}
+            sx={styles.dropdown}
+          />
         </Box>
+
+        <Box sx={styles.btnsBoxContainer}>{btnsBox}</Box>
       </Box>
     </Box>
   )

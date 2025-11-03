@@ -6,6 +6,18 @@ export const categoriesMock = [
   { name: 'History' }
 ]
 
+export const subjectsMock = [
+  { name: 'Botany' },
+  { name: 'Biochemistry' },
+  { name: 'Genetics' },
+  { name: 'Anatomy' },
+  { name: 'SAT' },
+  { name: 'Zoology' },
+  { name: 'Math' },
+  { name: 'Physics' },
+  { name: 'Chemistry' }
+]
+
 export const languagesMock = [
   { name: 'Chinese' },
   { name: 'Czech' },
